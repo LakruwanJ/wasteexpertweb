@@ -25,7 +25,7 @@ export default function CardEcommerce({ user }) {
             <h3 className="text-xl font-medium text-slate-700">
               {user.name}
             </h3>
-            <p className=" text-slate-400"> {user.role || user.vehical}</p>
+            <p className=" text-slate-400"> {user.role || user.vehical || user.address}</p>
           </header>
           <p>
             {user.job}
