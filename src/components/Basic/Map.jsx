@@ -8,7 +8,7 @@ import {
 
 const API_KEY = 'AIzaSyBG3Ua3R0x4emKkYNkGan-Ds2dDvFUaEmM'; // Replace with your actual API key
 
-const Map = (props) => {
+const Map = () => {
   const [mapCenter, setMapCenter] = useState({ lat: 6.7579003, lng: 81.2185123 }); // Initial center
   const [userLocations, setUserLocations] = useState([]);
   const [databaseLocations, setDatabaseLocations] = useState([]);
@@ -48,7 +48,7 @@ const Map = (props) => {
       libraries={['places']} // Add 'places' library for user location search (optional)
     >
       <GoogleMap
-        mapContainerStyle={{ width: '83.5vw', height: '94vh' }}
+        mapContainerStyle={{ width: '83.5vw', height: '94vh' }} // Responsive size based on viewport
         center={mapCenter}
         zoom={10}
         onClick={(event) => setMapCenter(event.latLng)} // Update map center on click

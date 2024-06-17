@@ -1,12 +1,12 @@
-import React from 'react'
-import Mapp from '../Basic/Map'
+import React from 'react';
+import Mapp from '../Basic/Map';
 
 function Map() {
   return (
-    <div className='felx pt-3'>
-    <Mapp />
+    <div className="w-full h-full">
+      <Mapp />
     </div>
-  )
+  );
 }
 
-export default Map
+export default Map;
