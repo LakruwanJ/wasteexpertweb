@@ -38,10 +38,10 @@ const categories = [
 
 
 
-function GarbageCategories() {
+function GarbageCategories(Name, Value, OnChange) {
     return (
         <div>
-            <SelectMenu Items={categories} Title="Select Category"/>
+            <SelectMenu Items={categories} Title="Select Category" Name={Name} Value={Value} OnChange={OnChange}/>
         </div>
     )
 }

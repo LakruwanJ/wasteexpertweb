@@ -1,19 +1,21 @@
 import React from 'react'
 
-function SelectMenu({ Items, Title }) {
+function SelectMenu({ Items, Title, NameVar, ValueVar, OnChangeVar }) {
     return (
         <>
             {/*<!-- Component: Rounded base basic select --> */}
             <div className="relative my-6 md:w-60">
                 <select
-                    id="id-04"
-                    name="id-04"
+                    id={NameVar}
+                    name={NameVar}                  
+                    value={ValueVar}
+                    onChange={OnChangeVar}
                     required
                     className="peer relative h-10 w-full appearance-none rounded border border-slate-200 bg-white px-4 text-sm text-slate-500 outline-none transition-all autofill:bg-white focus:border-emerald-500 focus-visible:outline-none focus:focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
                 >
                     <option value="" disabled selected></option>
                     {Items.map((item) => (
-                        <option key={item.value} value={item.value}>
+                        <option key={item.name} value={item.name}>
                             {item.name}
                         </option>
                     ))}

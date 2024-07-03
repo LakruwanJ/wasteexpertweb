@@ -19,10 +19,10 @@ const categories = [
     },
 ];
 
-function AreaSelect() {
+function AreaSelect( ItemValue, ItemOnChange) {
   return (
     <div>
-    <SelectMenu Items={categories} Title="Select Area"/>
+    <SelectMenu Items={categories} Title="Select Area" ValueVar={ItemValue} OnChangeVar={ItemOnChange}/>
     </div>
   )
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Card1 from '../Basic/Card1'
 import Map from '../Basic/Map'
-import AddNewScheduleForm from '../main/AddNewScheduleForm'
+import AddNewSmartBinForm from '../main/AddNewScheduleForm'
 
-function AddSchedule() {
+function AddSmartBin() {
 
   function Side2() {
     return (
@@ -15,10 +15,10 @@ function AddSchedule() {
   
   return (
     <div>
-      <Card1 side1={<AddNewScheduleForm />} side2={<Side2 />} />
+      <Card1 side1={<AddNewSmartBinForm />} side2={<Side2 />} />
     </div>
   )
 
 }
 
-export default AddSchedule
+export default AddSmartBin

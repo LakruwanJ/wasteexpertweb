@@ -2,7 +2,7 @@ import React from 'react';
 import SearchWithCategory from '../Basic/smallcomponents/SearchWithCategory';
 import SmartBins from '../Basic/smallcomponents/SmartBins';
 import WasteToCollect from '../Basic/smallcomponents/WasteToCollect';
-import Map from './Map';
+import Map from './Map2';
 
 function DashboardA() {
   return (
