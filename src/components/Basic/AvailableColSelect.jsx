@@ -37,10 +37,10 @@ const categories = [
 ];
 
 
-function AvailableColSelect() {
+function AvailableColSelect(Name_, Value_, OnChange) {
   return (
     <div>
-      <SelectMenu Items={categories} Title="Select Collector"/>
+      <SelectMenu Items={categories} XXX="a" Title="Select Collectorr"  Value="aaa" OnChange={OnChange}/>
     </div>
   )
 }

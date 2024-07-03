@@ -1,14 +1,16 @@
 import React from 'react'
 
-function DatePicker() {
+function DatePicker(NameVar,ValueVar,OnChangeVar) {
     return (
         <>
             {/*<!-- Component: Rounded basic base sized datepicker --> */}
             <div className="relative my-6">
                 <input
-                    id="id-date07"
+                    id={NameVar}
                     type="date"
-                    name="id-date07"
+                    name={NameVar}
+                    value={ValueVar}
+                    onChange={OnChangeVar}
                     className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white invalid:border-pink-500 invalid:text-pink-500 focus:border-emerald-500 focus:outline-none invalid:focus:border-pink-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
                 />
                 <label
