@@ -6,6 +6,7 @@ import Dispatcher from './components/Pages/Dispatcher';
 import Collector from './components/Pages/Collector';
 import Login from './components/Pages/login';
 import Register from './components/Pages/register';
+import Map from './components/main/Map2';
 import ProtectedRoute from './components/ProtectedRoute';
 
 
@@ -15,10 +16,17 @@ function App() {
       <Routes>
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
+
+        <Route path="/Admin" element={<Admin />} />
+        <Route path="/Dispatcher" element={<Dispatcher />} />
+        <Route path="/Collector" element={<Collector />} />
+        <Route path="/map" element={<Map />} />
+
         <Route path="/Admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
         <Route path="/Dispatcher" element={<ProtectedRoute><Dispatcher /></ProtectedRoute>} />
         <Route path="/Collector" element={<ProtectedRoute><Collector /></ProtectedRoute>} />
         <Route path="/" element={<Admin />} /> {/* Or redirect to login */}
+
       </Routes>
     </BrowserRouter>
   );
