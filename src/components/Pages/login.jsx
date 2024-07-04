@@ -1,9 +1,36 @@
-import React from 'react';
+// login.jsx
+
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import apiService from '../../apiService';
 import loginImage from '../Images/Mobile login-bro.svg';
-import { Link } from 'react-router-dom';
 import logo from '../Images/Logo.png';
 
 const Login = () => {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await apiService.login(formData);
+      if (response.data.status) {
+        localStorage.setItem('token', response.data.token);
+        alert('Login successful');
+        navigate('/admin');
+      } else {
+        alert(response.data.error);
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      alert('Error logging in');
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen md:flex-row bg-gray-100">
       <div className="flex flex-1 items-center justify-center p-4 md:p-6">
@@ -16,7 +43,7 @@ const Login = () => {
               <img src={logo} alt="Logo" className="h-10" />
             </a>
           </div>
-          <form className="mt-8 space-y-6">
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
                 <label htmlFor="email" className="sr-only">Email</label>
@@ -27,6 +54,8 @@ const Login = () => {
                     type="email"
                     autoComplete="email"
                     required
+                    value={formData.email}
+                    onChange={handleChange}
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                     placeholder="Email address"
                   />
@@ -41,31 +70,12 @@ const Login = () => {
                     type="password"
                     autoComplete="current-password"
                     required
+                    value={formData.password}
+                    onChange={handleChange}
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                     placeholder="Password"
                   />
-                  <span className="absolute inset-y-0 right-0 flex items-center pr-3">
-                    
-                  </span>
                 </div>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
-                </label>
-              </div>
-              <div className="text-sm">
-                <a href="#" className="font-medium text-teal-600 hover:text-teal-500">
-                  Forgot your password?
-                </a>
               </div>
             </div>
             <div>
