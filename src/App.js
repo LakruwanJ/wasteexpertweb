@@ -6,6 +6,7 @@ import Dispatcher from './components/Pages/Dispatcher';
 import Collector from './components/Pages/Collector';
 import Login from './components/Pages/login';
 import Register from './components/Pages/register';
+import Map from './components/main/Map2';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Dispatcher" element={<Dispatcher />} />
         <Route path="/Collector" element={<Collector />} />
+        <Route path="/map" element={<Map />} />
       </Routes>
     </BrowserRouter>
   );

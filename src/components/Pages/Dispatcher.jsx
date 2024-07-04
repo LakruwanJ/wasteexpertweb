@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SideNav from "../main/SideNav";
 import DashboardA from "../main/DashboardA";
 import AddSchedule from "../main/AddSchedule";
-import AddSmartBin from "../main/AddSchedule";
+import AddSmartBin from "../main/AddSmartBin";
 import AvailableColl from "../main/AvailableColl";
 import Map from "../main/Map";
 import ManageSchedules from "../main/ManageSchedules";

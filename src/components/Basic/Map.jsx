@@ -13,24 +13,40 @@ const Map = () => {
   const [userLocations, setUserLocations] = useState([]);
   const [databaseLocations, setDatabaseLocations] = useState([]);
   const [directions, setDirections] = useState(null); // To store calculated directions
+  const [kandyLocation, setKandyLocation] = useState(null); // Replace with actual Kandy coordinates
 
   // Function to fetch live user locations from your backend API (replace with your implementation)
   const fetchLocations = async () => {
-    const response = await fetch('/api/locations');
-    const data = await response.json();
-    setUserLocations(data.locations);
+    try {
+      const response = await fetch('/api/locations');
+      const data = await response.json();
+      setUserLocations(data.locations);
+    } catch (error) {
+      console.error('Error fetching user locations:', error);
+    }
   };
 
   // Function to fetch database locations from your backend API (replace with your implementation)
   const fetchDatabaseLocations = async () => {
-    const response = await fetch('/api/database-locations');
-    const data = await response.json();
-    setDatabaseLocations(data.locations);
+    try {
+      const response = await fetch('/api/database-locations');
+      const data = await response.json();
+      setDatabaseLocations(data.locations);
+    } catch (error) {
+      console.error('Error fetching database locations:', error);
+    }
+  };
+
+  // Fetch Kandy coordinates from your API
+  const fetchKandyLocation = async () => {
+    const data = { lat: 6.7579003, lng: 81.2185123 };
+    setKandyLocation(data); // Assuming your API response has a 'location' property
   };
 
   useEffect(() => {
     fetchLocations();
     fetchDatabaseLocations();
+    fetchKandyLocation();
   }, []);
 
   // (Optional) Function to calculate the shortest path between all database locations
@@ -41,6 +57,8 @@ const Map = () => {
     // Update the directions state with the calculated route object
     setDirections(/* route object */);
   };
+
+  const datal = { lat: 6.7579003, lng: 81.2185123 };
 
   return (
     <LoadScript
@@ -59,6 +77,14 @@ const Map = () => {
         {databaseLocations.map((location) => (
           <Marker key={location.id} position={location} />
         ))}
+
+        {/* Conditionally render Kandy marker */}
+        
+          <Marker key="kandy" position={datal} title="Kandy" />
+          
+        
+        {console.log(datal)}
+
         {directions && <DirectionsRenderer directions={directions} />} {/* Display calculated route */}
       </GoogleMap>
     </LoadScript>
