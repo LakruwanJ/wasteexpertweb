@@ -1,12 +1,12 @@
 import React from "react";
-import { CreateUserForm } from "./CreateUserForm";
+import CreateUserForm  from "./CreateUserForm";
 
-export default function CardEcommerce({ name }) {
+function NewUser({ name }) {
   const [open, setOpen] = React.useState(false);
+  
   return (
     <>
-      <CreateUserForm open={open} onClose={() => setOpen(false)} />
-      {/*<!-- Component: E-commerce card --> */}
+      <CreateUserForm open={open} onClose={() => setOpen(false)} usertype={name}/>
       <button
         onClick={() => setOpen(true)}
         className="overflow-hidden rounded-lg border-2 border-dashed border-slate-300 bg-white text-center text-slate-500 shadow-md shadow-slate-200 p-4 items-center"
@@ -33,3 +33,5 @@ export default function CardEcommerce({ name }) {
     </>
   );
 }
+
+export default NewUser

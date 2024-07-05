@@ -18,7 +18,7 @@ function MngDisp() {
       
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-      <NewUser name={'Dispature'}/>
+      <NewUser name={'Dispatcher'}/>
       {disnData.map((admin) => (
         <UserCard user={admin}/>
       ))}
