@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   GoogleMap,
   LoadScript,
-  Marker,
+  MarkerF,
   DirectionsRenderer,
 } from '@react-google-maps/api';
 
@@ -72,15 +72,15 @@ const Map = () => {
         onClick={(event) => setMapCenter(event.latLng)} // Update map center on click
       >
         {userLocations.map((location) => (
-          <Marker key={location.id} position={location} />
+          <MarkerF key={location.id} position={location} />
         ))}
         {databaseLocations.map((location) => (
-          <Marker key={location.id} position={location} />
+          <MarkerF key={location.id} position={location} />
         ))}
 
         {/* Conditionally render Kandy marker */}
         
-          <Marker key="kandy" position={datal} title="Kandy" />
+          <MarkerF key="kandy" position={datal} title="Kandy" />
           
         
         {console.log(datal)}
