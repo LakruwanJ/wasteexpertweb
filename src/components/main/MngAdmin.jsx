@@ -17,7 +17,7 @@ function MngAdmin() {
       
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-      <NewUser name={'Admin'}/>
+    <NewUser name={'Admin'}/>
       {adminData.map((admin) => (
         <UserCard user={admin}/>
       ))}
