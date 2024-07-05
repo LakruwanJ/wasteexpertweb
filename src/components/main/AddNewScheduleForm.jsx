@@ -106,7 +106,7 @@ function AddNewScheduleForm() {
                     // Handle specific error scenarios (explained later)
                 });
         
-            console.error('Data sent'); // Moved after the Axios call
+            console.log('Data sent'); // Moved after the Axios call
         } catch (error) {
             console.error('Unhandled error:', error);
         }

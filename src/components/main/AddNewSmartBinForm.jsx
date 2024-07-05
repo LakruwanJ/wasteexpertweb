@@ -6,9 +6,10 @@ function AddNewSmartBinForm() {
 
     const [formData, setFormData] = useState({
         area: '',
-        location: '',
-        collector: '',
+        locationLat: '',
+        locationLng: '',
         garbageTypes: '',
+        fillLevel: '0',
     });
 
     const areas = [
@@ -59,28 +60,37 @@ function AddNewSmartBinForm() {
         }));
     };
 
-    const handleAddSchedule = async (event) => {
+    const handleAddSmartBin = async (event) => {
         event.preventDefault();
         console.log('Form data:', formData);
 
         try {
-            axios.post('', { formData })
-                .then(result => console.log(result))
-                .err(err => console.log(err))
-
-            console.error('EData sent');
-
-            // ... (handle response)
-        } catch (error) {
+            const response = await axios.post('http://localhost:3001/smartbin/smartbin', { formData });
+            console.log(response.data); // Assuming your response has data
+          } catch (error) {
             console.error('Error adding schedule:', error);
+          }
+
+        try {
+            axios.post('http://localhost:3001/smartbin/smartbin', { formData })
+                .then(result => console.log(result))
+                .catch(error => {
+                    console.error('Error sending schedule:', error);
+                    // Handle specific error scenarios (explained later)
+                });
+        
+            console.log('Data sent'); // Moved after the Axios call
+        } catch (error) {
+            console.error('Unhandled error:', error);
         }
 
-        // setFormData({
-        //     area: '',
-        //     date: '',
-        //     collector: '',
-        //     garbageTypes: '',
-        // });
+        setFormData({
+            area: '',
+            locationLat: '',
+            locationLng: '',
+            garbageTypes: '',
+            fillLevel: '0',
+        });
 
         // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         // checkboxes.forEach((checkbox) => checkbox.checked = false);
@@ -90,7 +100,7 @@ function AddNewSmartBinForm() {
     return (
         <div class="items-center md:mt-8">
             <div className="overflow-hidden bg-white rounded shadow-md text-slate-500 shadow-slate-200 p-6 border-2">
-                <form onSubmit={handleAddSchedule}>
+                <form onSubmit={handleAddSmartBin}>
                     <label for="price" class="block text-md font-medium leading-4 text-gray-900">
                         Select Area
                     </label>
@@ -102,7 +112,7 @@ function AddNewSmartBinForm() {
                         Location
                     </label>
                     <div className="relative my-6">
-                        <input type='text' name='locationLan' value={formData.locationLan} onChange={handleChange} required className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
+                        <input type='text' name='locationLat' value={formData.locationLat} onChange={handleChange} required className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
                         <label for="id-date07" className="absolute -top-2 left-2 z-[1] cursor-text px-2 text-xs text-slate-400 transition-all before:absolute before:left-0 before:top-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-sm peer-autofill:-top-2 peer-required:after:text-pink-500 peer-required:after:content-['\00a0*']  peer-focus:-top-2 peer-focus:cursor-default peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent">
                             Latitude
                         </label>
