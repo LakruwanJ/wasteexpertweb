@@ -6,7 +6,7 @@ import Dispatcher from './components/Pages/Dispatcher';
 import Collector from './components/Pages/Collector';
 import Login from './components/Pages/login';
 import Register from './components/Pages/register';
-import Map from './components/main/Map2';
+import Map from './components/Basic/MyMapComponent';
 import ProtectedRoute from './components/ProtectedRoute';
 
 
