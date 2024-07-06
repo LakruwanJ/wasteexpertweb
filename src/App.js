@@ -8,6 +8,9 @@ import Login from './components/Pages/login';
 import Register from './components/Pages/register';
 import Map from './components/Basic/MyMapComponent';
 import ProtectedRoute from './components/ProtectedRoute';
+import DispatcherLogin from './components/Pages/DispatcherLogin';
+import CollectorLogin from './components/Pages/CollectorLogin';
+
 
 
 function App() {
@@ -26,6 +29,12 @@ function App() {
         <Route path="/Dispatcher" element={<ProtectedRoute><Dispatcher /></ProtectedRoute>} />
         <Route path="/Collector" element={<ProtectedRoute><Collector /></ProtectedRoute>} />
         <Route path="/" element={<Admin />} /> {/* Or redirect to login */}
+
+        <Route path="/dispatcher-login" element={<DispatcherLogin />} />
+        <Route path="/" element={<DispatcherLogin />} /> {/* Redirect to login or homepage */}
+
+        <Route path="/collector-login" element={<CollectorLogin />} />
+        <Route path="/" element={<CollectorLogin />} /> {/* Redirect to login or homepage */}
 
       </Routes>
     </BrowserRouter>

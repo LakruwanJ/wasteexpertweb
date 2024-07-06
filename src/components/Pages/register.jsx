@@ -36,8 +36,8 @@ const Register = () => {
         alert(response.data.error);
       }
     } catch (error) {
-      console.error('Error registering:', error);
-      alert('Error registering');
+      console.error('Error registering:', error.response ? error.response.data : error.message);
+      alert(error.response?.data?.error || 'Error registering');
     }
   };
 
