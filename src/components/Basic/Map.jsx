@@ -6,6 +6,13 @@ import {
   DirectionsRenderer,
 } from '@react-google-maps/api';
 
+//Images
+import { foodbin } from '../Images/foodbin.png';
+import { Iglassbincon } from '../Images/glassbin.png';
+import { metalbin } from '../Images/metalbin.png';
+import { paperbin } from '../Images/paperbin.png';
+import { plasticbin } from '../Images/plasticbin.png';
+
 const API_KEY = 'AIzaSyBG3Ua3R0x4emKkYNkGan-Ds2dDvFUaEmM'; // Replace with your actual API key
 
 const Map = () => {
@@ -78,12 +85,9 @@ const Map = () => {
           <MarkerF key={location.id} position={location} />
         ))}
 
-        {/* Conditionally render Kandy marker */}
+
         
-          <MarkerF key="kandy" position={datal} title="Kandy" />
-          
-        
-        {console.log(datal)}
+          <MarkerF key="kandy" position={datal} title="Kandy" icon={foodbin}></MarkerF>
 
         {directions && <DirectionsRenderer directions={directions} />} {/* Display calculated route */}
       </GoogleMap>
