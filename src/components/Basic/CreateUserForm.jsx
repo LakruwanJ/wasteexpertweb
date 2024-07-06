@@ -22,7 +22,7 @@ function CreateUserForm({ open, onClose, usertype }) {
 
   const addNewUser = async (event) => {
     event.preventDefault(); // Prevent default form submission
-    console.log(formData);
+    console.log('formData:',formData);
 
     let link;
 
