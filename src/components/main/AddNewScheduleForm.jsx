@@ -65,6 +65,8 @@ function AddNewScheduleForm() {
         { value: 1, name: 'Glass' },
         { value: 2, name: 'Plastics' },
         { value: 3, name: 'Paper' },
+        { value: 3, name: 'Organic' },
+        { value: 3, name: 'Metal' },
 
     ];
 
@@ -110,6 +112,7 @@ function AddNewScheduleForm() {
         } catch (error) {
             console.error('Unhandled error:', error);
         }
+        
         
         // setFormData({
         //     area: '',

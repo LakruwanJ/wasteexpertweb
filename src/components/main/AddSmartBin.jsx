@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Card1 from '../Basic/Card1'
-import Map from '../Basic/Map'
+import Map from '../main/Map'
 import AddNewSmartBinForm from '../main/AddNewSmartBinForm'
 
 function AddSmartBin() {
