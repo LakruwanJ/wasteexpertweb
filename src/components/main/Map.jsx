@@ -21,8 +21,6 @@ function Map() {
       console.log(smartbins); // Print data after it's set
     });
   }, []);
-
-  const bindata = [];
   
   const binTypes = {
     Glass: [],

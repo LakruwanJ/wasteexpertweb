@@ -23,7 +23,7 @@ const SearchWithCategory = () => {
       </div>
 
       <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Search Results</h2>
+        <h2 className="text-2xl font-bold mb-4">Available Collectors</h2>
         <div className="space-y-4 md:space-y-0 md:flex md:flex-wrap md:space-x-4">
           {[...Array(5)].map((_, index) => (
             <div key={index} className="flex items-center space-x-4 mb-4 md:w-1/2 lg:w-full">

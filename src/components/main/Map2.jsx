@@ -1,29 +1,59 @@
-import React from 'react';
-import Map from './Map';
+import React, { useState, useEffect } from 'react';
+import Mapp from '../Basic/MapS';
+import axios from 'axios';
 
-const sriLankaLocations = [
-  // Replace with your array of Sri Lanka travel locations
-  // Each location should have an 'id', 'lat', and 'lng' property
-  { id: 1, lat: 7.873054, lng: 80.771797 }, // Example: Sigiriya
-  { id: 2, lat: 6.927079, lng: 79.861244 }, // Example: Kandy
-];
+function Map() {
 
-const smartbins = [
-  // Replace with your array of Smartbin objects
-  // Each Smartbin object should have an 'id' and a 'location' property with 'lat' and 'lng'
-  { id: 1, location: { lat: 6.777423, lng: 81.212777 } }, // Example Smartbin
-];
+  const [smartbins, setSmartbins] = useState([]);
 
-const schedules = [
-  // Replace with your array of Schedule objects
-  // Each Schedule object should have an 'id' and a 'location' property with 'lat' and 'lng'
-  { id: 1, location: { lat: 6.815057, lng: 81.000827 } }, // Example Schedule
-];
+  const fetchData = async (callback) => {
+    try {
+      const response = await axios.post('http://localhost:3001/smartbin/getSmartBin'); // Use Axios for GET request
+      setSmartbins(response.data.smartbins);
+      callback();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-const Map2 = () => {
+  useEffect(() => {
+    fetchData(() => {
+      console.log(smartbins); // Print data after it's set
+    });
+  }, []);
+  
+  const binTypes = {
+    Glass: [],
+    Plastics: [],
+    Paper: [],
+    Organic: [],
+    Metal: []
+    // Add more bin types as needed
+  };
+
+  smartbins.forEach(bin => {
+    const { area, locationLat, locationLng, garbageTypes, fillLevel } = bin;
+    console.log(garbageTypes)
+    binTypes[garbageTypes].push({
+      loc: { lat: locationLat, lng: locationLng },
+      area: area,
+      fillLevel: fillLevel,
+    });
+  });
+
   return (
-    <Map smartbins={smartbins} schedules={schedules} sriLankaLocations={sriLankaLocations} />
-  );
-};
 
-export default Map2;
+    <div className="w-full h-full">
+      <Mapp props={{
+        type1: "food", foodbinLocation: binTypes.Organic,
+        type2: "glass", glassbinLocation: binTypes.Glass,
+        type3: "metal", matalLocation: binTypes.Metal,
+        type4: "paper", paperbinLocation: binTypes.Paper,
+        type5: "plastic", plasticbinLocation: binTypes.Plastics,
+
+      }} />
+    </div>
+  );
+}
+
+export default Map;
