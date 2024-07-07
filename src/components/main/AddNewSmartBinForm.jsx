@@ -1,8 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import SelectMenu from '../Basic/FormEliments/SelectMenu';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AddNewSmartBinForm() {
+
+    const tsu = (text) => toast.success(text, {
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    });
+
+    const ter = (text) => toast.error(text, {
+        position: "top-right",
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    });
 
     const [formData, setFormData] = useState({
         area: '',
@@ -69,9 +92,11 @@ function AddNewSmartBinForm() {
         try {
             const response = await axios.post('http://localhost:3001/smartbin/smartbin', { formData });
             console.log(response.data); // Assuming your response has data
-          } catch (error) {
+            tsu('New Smart Bin Added');
+        } catch (error) {
             console.error('Error adding schedule:', error);
-          }
+            ter('Error Adding Smart Bin')
+        }
 
         try {
             axios.post('http://localhost:3001/smartbin/smartbin', { formData })
@@ -80,7 +105,7 @@ function AddNewSmartBinForm() {
                     console.error('Error sending schedule:', error);
                     // Handle specific error scenarios (explained later)
                 });
-        
+
             console.log('Data sent'); // Moved after the Axios call
         } catch (error) {
             console.error('Unhandled error:', error);
@@ -94,8 +119,8 @@ function AddNewSmartBinForm() {
             fillLevel: '0',
         });
 
-        // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        // checkboxes.forEach((checkbox) => checkbox.checked = false);
+        const radiobuttons = document.querySelectorAll('input[type="radio"]');
+        radiobuttons.forEach((radio) => radio.checked = false);
     };
 
 
@@ -132,28 +157,28 @@ function AddNewSmartBinForm() {
                     <div>
                         {garbagetype.map((type) => (
                             <div className="relative flex flex-wrap items-center">
-                                <input 
-            className="w-4 h-4 transition-colors bg-white border-2 rounded-full appearance-none cursor-pointer peer border-slate-500 checked:border-emerald-500 checked:bg-emerald-500 checked:hover:border-emerald-600 checked:hover:bg-emerald-600 focus:outline-none checked:focus:border-emerald-700 checked:focus:bg-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50"
-            type="radio" name="garbageTypes" value={type.name} onChange={handleChange} />
+                                <input
+                                    className="w-4 h-4 transition-colors bg-white border-2 rounded-full appearance-none cursor-pointer peer border-slate-500 checked:border-emerald-500 checked:bg-emerald-500 checked:hover:border-emerald-600 checked:hover:bg-emerald-600 focus:outline-none checked:focus:border-emerald-700 checked:focus:bg-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50"
+                                    type="radio" name="garbageTypes" value={type.name} onChange={handleChange} />
                                 <label className="cursor-pointer pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
                                     htmlFor="id-c01" key={type.value}>
                                     {type.name}
                                 </label>
                                 <svg
-            className="absolute left-0 w-4 h-4 transition-all duration-300 scale-50 opacity-0 pointer-events-none fill-white peer-checked:scale-100 peer-checked:opacity-100 peer-disabled:cursor-not-allowed"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-labelledby="title-1 description-1"
-            role="graphics-symbol"
-          >
-            <title id="title-1">Circle Shape</title>
-            <desc id="description-1">
-              Circle shape to indicate whether the radio input is checked or
-              not.
-            </desc>
-            <circle cx="8" cy="8" r="4" />
-          </svg>
+                                    className="absolute left-0 w-4 h-4 transition-all duration-300 scale-50 opacity-0 pointer-events-none fill-white peer-checked:scale-100 peer-checked:opacity-100 peer-disabled:cursor-not-allowed"
+                                    viewBox="0 0 16 16"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    aria-labelledby="title-1 description-1"
+                                    role="graphics-symbol"
+                                >
+                                    <title id="title-1">Circle Shape</title>
+                                    <desc id="description-1">
+                                        Circle shape to indicate whether the radio input is checked or
+                                        not.
+                                    </desc>
+                                    <circle cx="8" cy="8" r="4" />
+                                </svg>
                             </div>
                         ))}
                     </div>
@@ -166,6 +191,9 @@ function AddNewSmartBinForm() {
                         </span>
                         <span>Add New Smart Bin</span>
                     </button>
+
+                    <ToastContainer 
+                    />
                 </form>
             </div>
         </div>

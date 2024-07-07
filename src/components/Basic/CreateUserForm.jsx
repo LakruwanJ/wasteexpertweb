@@ -1,8 +1,30 @@
 import React, { useState } from "react";
 import axios from 'axios';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function CreateUserForm({ open, onClose, usertype }) {
+
+  const tsu = (text) => toast.success(text, {
+    autoClose: 10000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
+
+  const ter = (text) => toast.error(text, {
+    position: "top-right",
+    autoClose: 10000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  });
 
   const [formData, setFormData] = useState({
     username: '',
@@ -22,34 +44,34 @@ function CreateUserForm({ open, onClose, usertype }) {
 
   const addNewUser = async (event) => {
     event.preventDefault(); // Prevent default form submission
-    console.log('formData:',formData);
+    console.log('formData:', formData);
 
     let link;
 
-  switch (usertype) {
-    case 'Admin':
-      link = 'http://localhost:3001/addAdmin/addAdmin';
-      break;
-    case 'Collector':
-      link = 'http://localhost:3001/addCollector/addCollector';
-      break;
-    case 'Dispatcher':
-      link = 'http://localhost:3001/addDispatcher/addDispatcher';
-      break;
-    default:
-      console.error('Invalid user type:', usertype);
-      return; // Exit the function early if usertype is invalid
-  }
+    switch (usertype) {
+      case 'Admin':
+        link = 'http://localhost:3001/addAdmin/addAdmin';
+        break;
+      case 'Collector':
+        link = 'http://localhost:3001/addCollector/addCollector';
+        break;
+      case 'Dispatcher':
+        link = 'http://localhost:3001/addDispatcher/addDispatcher';
+        break;
+      default:
+        console.error('Invalid user type:', usertype);
+        return; // Exit the function early if usertype is invalid
+    }
 
-  try {
-    const response = await axios.post(link, formData);
-    console.log(response.data);
-  } catch (error) {
-    console.error('Error sending schedule:', error);
-    // Handle specific error scenarios here (e.g., retry logic, user feedback)
-  } finally {
-    console.log('Data sent (or error occurred)'); // Informative message regardless of success or failure
-  }
+    try {
+      const response = await axios.post(link, formData);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error sending schedule:', error);
+      // Handle specific error scenarios here (e.g., retry logic, user feedback)
+    } finally {
+      console.log('Data sent (or error occurred)'); // Informative message regardless of success or failure
+    }
 
   };
 
@@ -59,7 +81,7 @@ function CreateUserForm({ open, onClose, usertype }) {
 
         <button className=" absolute right-2 top-2" onClick={onClose}>
 
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" width="15" viewBox="0 0 384 512"><path fill="#ff4d4d" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="20" width="15" viewBox="0 0 384 512"><path fill="#ff4d4d" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" /></svg>
         </button>
 
         <form onSubmit={addNewUser}>
@@ -167,6 +189,8 @@ function CreateUserForm({ open, onClose, usertype }) {
             </span>
             <span>Add New {usertype}</span>
           </button>
+
+          <ToastContainer/>
         </form>
       </div>
     </div>

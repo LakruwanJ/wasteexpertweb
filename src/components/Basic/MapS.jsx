@@ -83,7 +83,7 @@ const Map = (props) => {
       libraries={['places']} // Add 'places' library for user location search (optional)
     >
       <GoogleMap
-        mapContainerStyle={{ width: '83.5vw', height: '94vh', position: 'absolute', }} // Responsive size based on viewport
+        mapContainerStyle={{ width: '53.5vw', height: '70vh', position: 'absolute', }} // Responsive size based on viewport
         center={mapCenter}
         zoom={10}
         onClick={(event) => setMapCenter(event.latLng)} // Update map center on click

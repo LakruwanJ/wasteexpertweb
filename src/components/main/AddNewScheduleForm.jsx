@@ -1,8 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import SelectMenu from '../Basic/FormEliments/SelectMenu';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AddNewScheduleForm() {
+
+    const tsu = (text) => toast.success(text, {
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    });
+
+    const ter = (text) => toast.error(text, {
+        position: "top-right",
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+    });
 
     const [formData, setFormData] = useState({
         area: '',
@@ -100,29 +123,51 @@ function AddNewScheduleForm() {
         event.preventDefault();
         console.log('Form data:', formData);
 
+        // try {
+        //     axios.post('http://localhost:3001/schedulePickup/newschedulepickup', { formData })
+        //         .then(result => console.log(result))
+                
+        //         .catch(error => {
+        //             console.error('Error sending schedule:', error);
+        //             // Handle specific error scenarios (explained later)
+        //         });
+        
+        //     console.log('Data sent'); // Moved after the Axios call
+        // } catch (error) {
+        //     console.error('Unhandled error:', error);
+        // }
+
         try {
-            axios.post('http://localhost:3001/schedulePickup/schedulepickup', { formData })
+            const response = await axios.post('http://localhost:3001/schedulePickup/newschedulepickup', { formData });
+            console.log(response.data); // Assuming your response has data
+            tsu('New Schedule Pickup Added');
+        } catch (error) {
+            console.error('Error adding schedule:', error);
+            ter('Error Adding Schedule Pickup')
+        }
+
+        try {
+            axios.post('http://localhost:3001/schedulePickup/newschedulepickup', { formData })
                 .then(result => console.log(result))
                 .catch(error => {
                     console.error('Error sending schedule:', error);
                     // Handle specific error scenarios (explained later)
                 });
-        
+
             console.log('Data sent'); // Moved after the Axios call
         } catch (error) {
             console.error('Unhandled error:', error);
         }
         
-        
-        // setFormData({
-        //     area: '',
-        //     date: '',
-        //     collector: '',
-        //     garbageTypes: '',
-        // });
+        setFormData({
+            area: '',
+            date: '',
+            collector: '',
+            garbageTypes: '',
+        });
 
-        // const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        // checkboxes.forEach((checkbox) => checkbox.checked = false);
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach((checkbox) => checkbox.checked = false);
     };
 
 
@@ -182,6 +227,9 @@ function AddNewScheduleForm() {
                         </span>
                         <span>Add New Schedule</span>
                     </button>
+                    
+                    <ToastContainer 
+                    />
                 </form>
             </div>
         </div>
