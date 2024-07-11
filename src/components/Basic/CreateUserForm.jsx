@@ -66,13 +66,26 @@ function CreateUserForm({ open, onClose, usertype }) {
     try {
       const response = await axios.post(link, formData);
       console.log(response.data);
+      tsu('New '+ usertype+' Added');
+      setFormData({
+        username: '',
+        password: '',
+        fullName: '',
+        address: '',
+        phoneNum: '',
+        email: '',
+        role: '',
+        jobs: '',
+        vehicalNo: '',
+      });
     } catch (error) {
       console.error('Error sending schedule:', error);
+      
+      ter('New '+ usertype+' Added');
       // Handle specific error scenarios here (e.g., retry logic, user feedback)
     } finally {
       console.log('Data sent (or error occurred)'); // Informative message regardless of success or failure
     }
-
   };
 
   return (
@@ -139,7 +152,7 @@ function CreateUserForm({ open, onClose, usertype }) {
             E-mail
           </label>
           <div className="relative my-6">
-            <input type='text' name='email' value={formData.email} onChange={handleChange} required className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
+            <input type='email' name='email' value={formData.email} onChange={handleChange} required className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
             <label for="id-date07" className="absolute -top-2 left-2 z-[1] cursor-text px-2 text-xs text-slate-400 transition-all before:absolute before:left-0 before:top-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-sm peer-autofill:-top-2 peer-required:after:text-pink-500 peer-required:after:content-['\00a0*']  peer-focus:-top-2 peer-focus:cursor-default peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent">
               Enter e-mail
             </label>

@@ -17,8 +17,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
 
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Dispatcher" element={<Dispatcher />} />
@@ -28,13 +26,17 @@ function App() {
         <Route path="/Admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
         <Route path="/Dispatcher" element={<ProtectedRoute><Dispatcher /></ProtectedRoute>} />
         <Route path="/Collector" element={<ProtectedRoute><Collector /></ProtectedRoute>} />
-        <Route path="/" element={<Admin />} /> {/* Or redirect to login */}
 
         <Route path="/dispatcher-login" element={<DispatcherLogin />} />
         <Route path="/" element={<DispatcherLogin />} /> {/* Redirect to login or homepage */}
 
         <Route path="/collector-login" element={<CollectorLogin />} />
         <Route path="/" element={<CollectorLogin />} /> {/* Redirect to login or homepage */}
+
+        
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
+
 
       </Routes>
     </BrowserRouter>
