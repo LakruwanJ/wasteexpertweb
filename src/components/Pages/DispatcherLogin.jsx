@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import apiService from '../../apiService';
-import loginImage from '../Images/Login-bro.svg';
-import logo from '../Images/Logo.png';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import apiService from "../../apiService";
+import loginImage from "../Images/Login-bro.svg";
+import logo from "../Images/Logo.png";
 
 const DispatcherLogin = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -14,37 +14,48 @@ const DispatcherLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData)
     try {
-      const response = await apiService.login(formData); // Adjust API call to dispatcher login
+      const response = await apiService.dispatcherLogin(formData); // Adjust API call to dispatcher login
       if (response.data.status) {
-        localStorage.setItem('token', response.data.token);
-        alert('Login successful');
-        navigate('/dispatcher-dashboard'); // Adjust redirect path for dispatcher
+        localStorage.setItem("token", response.data.token);
+        alert("Login successful");
+        navigate("/Dispatcher"); // Adjust redirect path for dispatcher
       } else {
         alert(response.data.error);
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      alert('Error logging in');
+      alert("Error logging in");
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen md:flex-row bg-gray-100">
       <div className="flex flex-1 items-center justify-center p-4 md:p-6">
-        <img src={loginImage} alt="Illustration" className="max-w-xs lg:max-w-md md:mr-8" />
+        <img
+          src={loginImage}
+          alt="Illustration"
+          className="max-w-xs lg:max-w-md md:mr-8"
+        />
       </div>
       <div className="flex flex-1 items-center justify-center p-4 md:p-6">
         <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-md shadow-md">
           <div className="flex justify-center mb-8">
-            <a href="https://google.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src={logo} alt="Logo" className="h-10" />
             </a>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
-                <label htmlFor="email" className="sr-only">Email</label>
+                <label htmlFor="email" className="sr-only">
+                  Email
+                </label>
                 <div className="relative">
                   <input
                     id="email"
@@ -60,7 +71,9 @@ const DispatcherLogin = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="password" className="sr-only">Password</label>
+                <label htmlFor="password" className="sr-only">
+                  Password
+                </label>
                 <div className="relative">
                   <input
                     id="password"
@@ -84,7 +97,6 @@ const DispatcherLogin = () => {
                 Login as Dispatcher
               </button>
             </div>
-            
           </form>
         </div>
       </div>

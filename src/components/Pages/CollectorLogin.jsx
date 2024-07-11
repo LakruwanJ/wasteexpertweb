@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import apiService from '../../apiService';
-import loginImage from '../Images/Secure login-bro.svg'; // Replace with actual collector image
-import logo from '../Images/Logo.png';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import apiService from "../../apiService";
+import loginImage from "../Images/Secure login-bro.svg"; // Replace with actual collector image
+import logo from "../Images/Logo.png";
 
 const CollectorLogin = () => {
-  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,34 +17,44 @@ const CollectorLogin = () => {
     try {
       const response = await apiService.collectorLogin(formData);
       if (response.data.status) {
-        localStorage.setItem('token', response.data.token);
-        alert('Login successful');
-        navigate('/collector-dashboard');
+        localStorage.setItem("token", response.data.token);
+        alert("Login successful");
+        navigate("/collector-dashboard");
       } else {
         alert(response.data.error);
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      alert('Error logging in');
+      alert("Error logging in");
     }
   };
 
   return (
     <div className="flex flex-col min-h-screen md:flex-row bg-gray-100">
       <div className="flex flex-1 items-center justify-center p-4 md:p-6">
-        <img src={loginImage} alt="Illustration" className="max-w-xs lg:max-w-md md:mr-8" />
+        <img
+          src={loginImage}
+          alt="Illustration"
+          className="max-w-xs lg:max-w-md md:mr-8"
+        />
       </div>
       <div className="flex flex-1 items-center justify-center p-4 md:p-6">
         <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-md shadow-md">
           <div className="flex justify-center mb-8">
-            <a href="https://google.com" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src={logo} alt="Logo" className="h-10" />
             </a>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
-                <label htmlFor="username" className="sr-only">Username</label>
+                <label htmlFor="username" className="sr-only">
+                  Username
+                </label>
                 <div className="relative">
                   <input
                     id="username"
@@ -60,7 +70,9 @@ const CollectorLogin = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="password" className="sr-only">Password</label>
+                <label htmlFor="password" className="sr-only">
+                  Password
+                </label>
                 <div className="relative">
                   <input
                     id="password"

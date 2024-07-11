@@ -1,17 +1,27 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import UserCard from '../Basic/UserCard'
 import NewUser from '../Basic/NewUser'
-
-//get from database
-const colData = [
-  { id: 1, name: 'Name', vehical: 'xxx-xxxx', job: 'This is the content of card.', mobile: '077 1234 567', image:'' },
-  { id: 1, name: 'Name', vehical: 'xxx-xxxx', job: 'This is the content of card.', mobile: '077 1234 567', image:'' },
-  { id: 1, name: 'Name', vehical: 'xxx-xxxx', job: 'This is the content of card.', mobile: '077 1234 567', image:'' },
-  { id: 1, name: 'Name', vehical: 'xx-xxxx', job: 'This is the content of card.', mobile: '077 1234 567', image:'' },
-  { id: 1, name: 'Name', vehical: 'xx-xxxx', job: 'This is the content of card.', mobile: '077 1234 567', image:'' },
-];
+import axios from 'axios';
 
 function MngColl() {
+
+  const [colData, setColData] = useState([]);
+
+  const fetchData = async (callback) => {
+    try {
+      const response = await axios.post('http://localhost:3001/addCollector/getAllCol'); // Use Axios for GET request
+      setColData(response.data.collectors);
+      callback();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(() => {
+    });
+  }, []);
+
   return (
     <div className="container mx-auto p-4">
       

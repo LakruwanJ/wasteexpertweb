@@ -7,6 +7,7 @@ import MngColl from "../main/MngColl";
 import MngResi from "../main/MngResi";
 import Map from "../main/Map";
 import ViewSchedule from "../main/ViewSchedule";
+import ManageSchedules from "../main/ManageSchedules";
 import Profile from "../main/Profile";
 
 
@@ -105,7 +106,7 @@ const Admin = () => {
             case "Map":
                 return <div><Map /></div>;
             case "View Schedules":
-                return <div><ViewSchedule /></div>;
+                return <div><ManageSchedules /></div>;
             case "Profile":
                 return <div><Profile /></div>;
             default:
