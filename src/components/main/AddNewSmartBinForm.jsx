@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function AddNewSmartBinForm() {
+function AddNewSmartBinForm({ onAreaChange, onReloadMap  }) {
 
     const tsu = (text) => toast.success(text, {
         autoClose: 10000,
@@ -36,18 +36,10 @@ function AddNewSmartBinForm() {
     });
 
     const areas = [
-        {
-            name: "Area 1",
-            content: "a,a,a,a,a"
-        },
-        {
-            name: "Area 2",
-            content: "a,a,a,a,a"
-        },
-        {
-            name: "Area 3",
-            content: "a,a,a,a,a"
-        },
+        { name: "Area 1" },
+        { name: "Area 2" },
+        { name: "Area 3" },
+        { name: "Area 4" },
     ];
 
     const garbagetype = [
@@ -83,6 +75,11 @@ function AddNewSmartBinForm() {
             ...prevData,
             [name]: type === 'checkbox' ? checked : event.target.value,
         }));
+
+        if (name === 'area') {
+            onAreaChange(event.target.value);
+        }
+
     };
 
     const handleAddSmartBin = async (event) => {
@@ -93,6 +90,7 @@ function AddNewSmartBinForm() {
             const response = await axios.post('http://localhost:3001/smartbin/smartbin', { formData });
             console.log(response.data); // Assuming your response has data
             tsu('New Smart Bin Added');
+            onReloadMap(); // Trigger reload after successful addition
         } catch (error) {
             console.error('Error adding schedule:', error);
             ter('Error Adding Smart Bin')
@@ -192,7 +190,7 @@ function AddNewSmartBinForm() {
                         <span>Add New Smart Bin</span>
                     </button>
 
-                    <ToastContainer 
+                    <ToastContainer
                     />
                 </form>
             </div>
