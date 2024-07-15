@@ -5,8 +5,9 @@ import axios from 'axios';
 function Map() {
 
   const [smartbins, setSmartbins] = useState([]);
+  const [scheduleWaste, setScheduleWaste] = useState([]);
 
-  const fetchData = async (callback) => {
+  const fetchSmartBin = async (callback) => {
     try {
       const response = await axios.post('http://localhost:3001/smartbin/getSmartBin'); // Use Axios for GET request
       setSmartbins(response.data.smartbins);
@@ -16,9 +17,22 @@ function Map() {
     }
   };
 
+  const fetchScheduleWaste = async (callback) => {
+    try {
+      const response = await axios.post('http://localhost:3001/schedule/getAllScheduleWaste'); // Use Axios for GET request
+      setScheduleWaste(response.data.allScheduleWaste);
+      callback();
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
-    fetchData(() => {
+    fetchSmartBin(() => {
       console.log(smartbins); // Print data after it's set
+    });
+    fetchScheduleWaste(() => {
+      console.log(scheduleWaste); // Print data after it's set
     });
   }, []);
   
@@ -44,14 +58,16 @@ function Map() {
   return (
 
     <div className="w-full h-full">
-      <Mapp props={{
+      <Mapp props={
+        {
         type1: "food", foodbinLocation: binTypes.Organic,
         type2: "glass", glassbinLocation: binTypes.Glass,
         type3: "metal", matalLocation: binTypes.Metal,
         type4: "paper", paperbinLocation: binTypes.Paper,
         type5: "plastic", plasticbinLocation: binTypes.Plastics,
-
-      }} />
+        Imagee1: "sched", ScheduleWaste: scheduleWaste,
+      }
+      } />
     </div>
   );
 }
