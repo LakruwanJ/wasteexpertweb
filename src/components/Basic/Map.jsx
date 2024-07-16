@@ -8,61 +8,20 @@ import {
 import pointInPolygon from 'point-in-polygon';
 //Images
 import foodbin from '../Images/foodbin.png';
-import Iglassbincon from '../Images/glassbin.png';
+import glassbincon from '../Images/glassbin.png';
 import metalbin from '../Images/metalbin.png';
 import paperbin from '../Images/paperbin.png';
 import plasticbin from '../Images/plasticbin.png';
 import sched from '../Images/schedule.png';
+import { area1, area2, area3, area4 } from '../Data/Areas';
 
 const API_KEY = 'AIzaSyBG3Ua3R0x4emKkYNkGan-Ds2dDvFUaEmM';
-
-//define areas
-const area1 = [
-  { lat: 6.774266003298117, lng: 81.24075106844994 },
-  { lat: 6.780512733259287, lng: 81.25548141251831 },
-  { lat: 6.7737724752807855, lng: 81.2651781056666 },
-  { lat: 6.767741638305237, lng: 81.2624222034034 },
-  { lat: 6.768248434228579, lng: 81.2586455965983 },
-  { lat: 6.757271150626272, lng: 81.24001773573772 },
-  { lat: 6.7672144471777695, lng: 81.24463898869358 },
-
-];
-
-const area2 = [
-  { lat: 6.757271150626272, lng: 81.24001773573772 },
-  { lat: 6.768248434228579, lng: 81.2586455965983 },
-  { lat: 6.767741638305237, lng: 81.2624222034034 },
-  { lat: 6.735061802581335, lng: 81.25888662133853 },
-  { lat: 6.742221773234042, lng: 81.23923139583977 },
-  { lat: 6.755689050397938, lng: 81.24755697170606 },
-
-];
-
-const area3 = [
-  { lat: 6.759842282186977, lng: 81.22911800396551 },
-  { lat: 6.774266003298117, lng: 81.24075106844994 },
-  { lat: 6.7672144471777695, lng: 81.24463898869358 },
-  { lat: 6.757271150626272, lng: 81.24001773573772 },
-  { lat: 6.734850554014478, lng: 81.23566384179234 },
-  { lat: 6.737430907460192, lng: 81.23201901892126 },
-  { lat: 6.74719195634824, lng: 81.23205529910241 },
-
-];
-
-const area4 = [
-  { lat: 6.74719195634824, lng: 81.23205529910241 },
-  { lat: 6.7365174046602485, lng: 81.22754002613087 },
-  { lat: 6.7360352248032935, lng: 81.21625141546762 },
-  { lat: 6.753152315978116, lng: 81.2129133854328 },
-  { lat: 6.759842282186977, lng: 81.22911800396551 }
-];
 
 const Map = (props) => {
 
   const [mapCenter, setMapCenter] = useState({ lat: 6.760755838476916, lng: 81.24733702841034 }); // Initial center
 
   useEffect(() => {
-
   }, []);
 
   function getImageForBinType(binType) {//select image for markerF
@@ -70,7 +29,7 @@ const Map = (props) => {
       case 'food':
         return foodbin;
       case 'glass':
-        return Iglassbincon;
+        return glassbincon;
       case 'metal':
         return metalbin;
       case 'paper':
@@ -99,11 +58,18 @@ const Map = (props) => {
     }
   }
 
+  const handleLocationCheck = () => {
+    // Check if the inputted location is inside the polygon
+    const isInsidePolygon = window.google.maps.geometry.poly.containsLocation(new window.google.maps.LatLng(props.props['checkLat'], props.props['checkLng']), new window.google.maps.Polygon({ paths: getArea(props.props['checkarea'])}));
+    console.log(isInsidePolygon ? "True" : "false");
+  };
+
   return (
     <>
+    <button onClick={handleLocationCheck}>Check Location</button>
       <LoadScript
         googleMapsApiKey={API_KEY}
-        libraries={['places']} // Add 'places' library for user location search (optional)
+        libraries={['places' , 'geometry']} // Add 'places' library for user location search (optional)
       >
         <GoogleMap
           mapContainerStyle={{ width: '83.5vw', height: '94vh', position: 'absolute', }} // Responsive size based on viewport
@@ -118,7 +84,7 @@ const Map = (props) => {
               <Polygon paths={getArea(item)}
                 options={{ fillColor: '#FF0000', fillOpacity: 0.35, strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2 }}
               />
-            )) : null} 
+            )) : null}
 
           {/* show bins, shedules -------- start */}
           {props.props['foodbinLocation'] ?

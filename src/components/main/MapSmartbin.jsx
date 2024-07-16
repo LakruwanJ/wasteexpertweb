@@ -67,7 +67,8 @@ function Map({ selectedArea,reloadMap  }) {
         type3: "metal", matalLocation: binTypes.Metal,
         type4: "paper", paperbinLocation: binTypes.Paper,
         type5: "plastic", plasticbinLocation: binTypes.Plastics,
-        selections: area
+        selections: area,
+        checkLat:6.768180221258139, checkLng:81.25264282490487 ,  checkarea:getArea(selectedArea)
       }
       } />
     </div>
