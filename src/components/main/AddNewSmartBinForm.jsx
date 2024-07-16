@@ -3,8 +3,9 @@ import SelectMenu from '../Basic/FormEliments/SelectMenu';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LocCheckInArea from '../Functions/LocCheckInArea';
 
-function AddNewSmartBinForm({ onAreaChange, onReloadMap  }) {
+function AddNewSmartBinForm({ onAreaChange, onReloadMap }) {
 
     const tsu = (text) => toast.success(text, {
         autoClose: 10000,
@@ -86,39 +87,47 @@ function AddNewSmartBinForm({ onAreaChange, onReloadMap  }) {
         event.preventDefault();
         console.log('Form data:', formData);
 
-        try {
-            const response = await axios.post('http://localhost:3001/smartbin/smartbin', { formData });
-            console.log(response.data); // Assuming your response has data
-            tsu('New Smart Bin Added');
-            onReloadMap(); // Trigger reload after successful addition
-        } catch (error) {
-            console.error('Error adding schedule:', error);
-            ter('Error Adding Smart Bin')
-        }
-
-        try {
-            axios.post('http://localhost:3001/smartbin/smartbin', { formData })
-                .then(result => console.log(result))
-                .catch(error => {
-                    console.error('Error sending schedule:', error);
-                    // Handle specific error scenarios (explained later)
+        if (LocCheckInArea({ checkLat: formData.locationLat, checkLng: formData.locationLng, checkarea: formData.area })) {
+            try {
+                const response = await axios.post('http://localhost:3001/smartbin/smartbin', { formData });
+                console.log(response.data); // Assuming your response has data
+                tsu('New Smart Bin Added');
+                onReloadMap(); // Trigger reload after successful addition
+                //clear form
+                setFormData({
+                    area: '',
+                    locationLat: '',
+                    locationLng: '',
+                    garbageTypes: '',
+                    fillLevel: '0',
                 });
+                const radiobuttons = document.querySelectorAll('input[type="radio"]');
+                radiobuttons.forEach((radio) => radio.checked = false);
+            } catch (error) {
+                console.error('Error adding schedule:', error);
+                ter('Error Adding Smart Bin')
+            }
 
-            console.log('Data sent'); // Moved after the Axios call
-        } catch (error) {
-            console.error('Unhandled error:', error);
+        } else {
+            ter('Entered Location Not in Selected Area')
         }
 
-        setFormData({
-            area: '',
-            locationLat: '',
-            locationLng: '',
-            garbageTypes: '',
-            fillLevel: '0',
-        });
 
-        const radiobuttons = document.querySelectorAll('input[type="radio"]');
-        radiobuttons.forEach((radio) => radio.checked = false);
+
+
+        // try {
+        //     axios.post('http://localhost:3001/smartbin/smartbin', { formData })
+        //         .then(result => console.log(result))
+        //         .catch(error => {
+        //             console.error('Error sending schedule:', error);
+        //             // Handle specific error scenarios (explained later)
+        //         });
+
+        //     console.log('Data sent'); // Moved after the Axios call
+        // } catch (error) {
+        //     console.error('Unhandled error:', error);
+        // }
+
     };
 
 
