@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Mapp from '../Basic/Map';
+import MapM from '../Basic/MapM';
 import axios from 'axios';
 
-function Map({ selectedArea,reloadMap  }) {
+function MapSmartbin({ selectedArea,reloadMap  }) {
 
   const [smartbins, setSmartbins] = useState([]);
   const [area, setArea] = useState([getArea(selectedArea)]);
@@ -22,7 +22,6 @@ function Map({ selectedArea,reloadMap  }) {
     }
   }
 
-  console.log(selectedArea)
   //fetch smart bins from db
   const fetchSmartBin = async (callback) => {
     try {
@@ -59,20 +58,19 @@ function Map({ selectedArea,reloadMap  }) {
 
 
   return (
-    <div className="w-full h-full">
-      <Mapp props={
+    <div className="absolute w-54vw h-90vh ">
+      <MapM props={
         {
         type1: "food", foodbinLocation: binTypes.Organic,
         type2: "glass", glassbinLocation: binTypes.Glass,
         type3: "metal", matalLocation: binTypes.Metal,
         type4: "paper", paperbinLocation: binTypes.Paper,
         type5: "plastic", plasticbinLocation: binTypes.Plastics,
-        selections: area,
-        checkLat:6.768180221258139, checkLng:81.25264282490487 ,  checkarea:getArea(selectedArea)
+        selections: area
       }
       } />
     </div>
   );
 }
 
-export default Map;
+export default MapSmartbin;

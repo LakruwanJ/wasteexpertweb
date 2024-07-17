@@ -5,28 +5,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LocCheckInArea from '../Functions/LocCheckInArea';
 
+//data
+import {areas} from '../Data/AreaNames';
+import {tsu,ter} from '../Functions/ResponseToste';
+
 function AddNewSmartBinForm({ onAreaChange, onReloadMap }) {
-
-    const tsu = (text) => toast.success(text, {
-        autoClose: 10000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-    });
-
-    const ter = (text) => toast.error(text, {
-        position: "top-right",
-        autoClose: 10000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-    });
 
     const [formData, setFormData] = useState({
         area: '',
@@ -35,13 +18,6 @@ function AddNewSmartBinForm({ onAreaChange, onReloadMap }) {
         garbageTypes: '',
         fillLevel: '0',
     });
-
-    const areas = [
-        { name: "Area 1" },
-        { name: "Area 2" },
-        { name: "Area 3" },
-        { name: "Area 4" },
-    ];
 
     const garbagetype = [
         { value: 1, name: 'Glass' },
@@ -111,23 +87,6 @@ function AddNewSmartBinForm({ onAreaChange, onReloadMap }) {
         } else {
             ter('Entered Location Not in Selected Area')
         }
-
-
-
-
-        // try {
-        //     axios.post('http://localhost:3001/smartbin/smartbin', { formData })
-        //         .then(result => console.log(result))
-        //         .catch(error => {
-        //             console.error('Error sending schedule:', error);
-        //             // Handle specific error scenarios (explained later)
-        //         });
-
-        //     console.log('Data sent'); // Moved after the Axios call
-        // } catch (error) {
-        //     console.error('Unhandled error:', error);
-        // }
-
     };
 
 

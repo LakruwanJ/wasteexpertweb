@@ -19,10 +19,9 @@ const API_KEY = 'AIzaSyBG3Ua3R0x4emKkYNkGan-Ds2dDvFUaEmM';
 
 const Map = (props) => {
 
-  const [mapCenter, setMapCenter] = useState({ lat: 6.760755838476916, lng: 81.24733702841034 }); // Initial center
+  const [mapCenter, setMapCenter] = useState({ lat: 6.760744676601805, lng: 81.24733849300866 }); // Initial center
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   function getImageForBinType(binType) {//select image for markerF
     switch (binType) {
@@ -58,23 +57,16 @@ const Map = (props) => {
     }
   }
 
-  const handleLocationCheck = () => {
-    // Check if the inputted location is inside the polygon
-    const isInsidePolygon = window.google.maps.geometry.poly.containsLocation(new window.google.maps.LatLng(props.props['checkLat'], props.props['checkLng']), new window.google.maps.Polygon({ paths: getArea(props.props['checkarea'])}));
-    console.log(isInsidePolygon ? "True" : "false");
-  };
-
   return (
     <>
-    <button onClick={handleLocationCheck}>Check Location</button>
       <LoadScript
         googleMapsApiKey={API_KEY}
         libraries={['places' , 'geometry']} // Add 'places' library for user location search (optional)
       >
         <GoogleMap
-          mapContainerStyle={{ width: '83.5vw', height: '94vh', position: 'absolute', }} // Responsive size based on viewport
+          mapContainerStyle={{ width: '54vw', height: '100vh', position: 'absolute', }} // Responsive size based on viewport
           center={mapCenter}
-          zoom={10}
+          zoom={14}
           onClick={(event) => setMapCenter(event.latLng)} // Update map center on click
         >
 
@@ -111,8 +103,6 @@ const Map = (props) => {
             props.props['plasticbinLocation'].map((item) => (
               <MarkerF key="kandy" position={item.loc} title="Kandy" icon={getImageForBinType(props.props["type5"])} ></MarkerF>
             )) : null}
-
-          {console.log(props.props['plasticbinLocation'])}
 
           {props.props['ScheduleWaste'] ?
             props.props['ScheduleWaste'].map((item) => (

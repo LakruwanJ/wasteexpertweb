@@ -1,14 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import MapFull from '../Basic/MapFull';
+import MapM from '../Basic/MapM';
 import axios from 'axios';
 
-function Map() {
+function MapSchedules({ selectedArea,reloadMap  }) {
 
   const [smartbins, setSmartbins] = useState([]);
   const [scheduleWaste, setScheduleWaste] = useState([]);
+  const [area, setArea] = useState([getArea(selectedArea)]);
 
-  //add or remove areas
-  const area = ['area1','area2','area3','area4']
+  function getArea(selectedArea) {//select area for polygon
+    switch (selectedArea) {
+      case 'Area 1':
+        return 'area1';
+      case 'Area 2':
+        return 'area2';
+      case 'Area 3':
+        return 'area3';
+      case 'Area 4':
+        return 'area4';
+      default:
+        return null;
+    }
+  }
 
   //fetch smart bins from db
   const fetchSmartBin = async (callback) => {
@@ -21,7 +34,6 @@ function Map() {
     }
   };
 
-  
   //fetch schedules from db
   const fetchScheduleWaste = async (callback) => {
     try {
@@ -36,7 +48,7 @@ function Map() {
   useEffect(() => {
     fetchSmartBin(() => {});
     fetchScheduleWaste(() => {});
-  }, []);
+  }, [reloadMap]);
   
   const binTypes = {
     Glass: [],
@@ -59,8 +71,9 @@ function Map() {
 
 
   return (
-    <div className="w-full h-full">
-      <MapFull props={
+    <div className="absolute w-54vw h-90vh ">
+      {'abcd'+ console.log(scheduleWaste)}
+      <MapM props={
         {
         type1: "food", foodbinLocation: binTypes.Organic,
         type2: "glass", glassbinLocation: binTypes.Glass,
@@ -75,4 +88,4 @@ function Map() {
   );
 }
 
-export default Map;
+export default MapSchedules;

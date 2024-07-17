@@ -2,7 +2,7 @@ import React from 'react';
 import SearchWithCategory from '../Basic/smallcomponents/SearchWithCategory';
 import SmartBins from '../Basic/smallcomponents/SmartBins';
 import WasteToCollect from '../Basic/smallcomponents/WasteToCollect';
-import Map from './Map2';
+import MapS from '../Basic/MapS'
 import Card1 from '../Basic/Card1'
 
 function DashboardA() {
@@ -33,7 +33,7 @@ function DashboardA() {
       </section>
       <section>
       <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
-        <Map />
+        {/* <MapS /> */}
         </div>
         </section>
 

@@ -6,11 +6,12 @@ import Dispatcher from './components/Pages/Dispatcher';
 import Collector from './components/Pages/Collector';
 import Login from './components/Pages/login';
 import Register from './components/Pages/register';
-// import Map from './components/Basic/MyMapComponent';
-// import Map2 from './components/Basic/mapTry';
+import Map from './components/main/Map';
+import MapSmartbin from './components/main/MapSmartbin';
 import ProtectedRoute from './components/ProtectedRoute';
 import DispatcherLogin from './components/Pages/DispatcherLogin';
 import CollectorLogin from './components/Pages/CollectorLogin';
+import ScheduleLocInArea from './components/Data/ScheduleLocInArea';
 
 
 
@@ -22,8 +23,8 @@ function App() {
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Dispatcher" element={<Dispatcher />} />
         <Route path="/Collector" element={<Collector />} />
-        {/* <Route path="/map" element={<Map />} />
-        <Route path="/trymap" element={<Map2 />} /> */}
+        <Route path="/MapSmartbin" element={<MapSmartbin />} />
+        <Route path="/abc" element={<ScheduleLocInArea />} />
 
         <Route path="/Admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
         <Route path="/Dispatcher" element={<ProtectedRoute><Dispatcher /></ProtectedRoute>} />

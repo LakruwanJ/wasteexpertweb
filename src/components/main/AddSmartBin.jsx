@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Card1 from '../Basic/Card1';
-import Map from '../main/MapSmartbin';
+import MapSmartbin from '../main/MapSmartbin';
 import AddNewSmartBinForm from '../main/AddNewSmartBinForm';
 
 function AddSmartBin() {
@@ -8,7 +8,7 @@ function AddSmartBin() {
   const [reloadMap, setReloadMap] = useState(false);
 
   const handleReloadMap = () => {
-    setReloadMap(!reloadMap); // Toggle the reload state
+    setReloadMap(!reloadMap);
   };
 
   const handleAreaChange = (area) => {
@@ -18,7 +18,7 @@ function AddSmartBin() {
   function Side2({ reloadMap }) {
     return (
       <div className="items-center md:mt-8 flex">
-        <Map selectedArea={selectedArea} reloadMap={reloadMap} />
+        <MapSmartbin selectedArea={selectedArea} reloadMap={reloadMap} />
       </div>
     );
   }
