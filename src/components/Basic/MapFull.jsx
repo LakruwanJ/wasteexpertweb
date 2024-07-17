@@ -17,9 +17,9 @@ import { area1, area2, area3, area4 } from '../Data/Areas';
 
 const API_KEY = 'AIzaSyBG3Ua3R0x4emKkYNkGan-Ds2dDvFUaEmM';
 
-const MapS = (props) => {
+const Map = (props) => {
 
-  const [mapCenter, setMapCenter] = useState({ lat: 6.760755838476916, lng: 81.24733702841034 }); // Initial center
+  const [mapCenter, setMapCenter] = useState({ lat: 6.760744676601805, lng: 81.24733849300866 }); // Initial center
 
   useEffect(() => {}, []);
 
@@ -64,9 +64,9 @@ const MapS = (props) => {
         libraries={['places' , 'geometry']} // Add 'places' library for user location search (optional)
       >
         <GoogleMap
-          mapContainerStyle={{ width: '83.5vw', height: '94vh', position: 'absolute', }} // Responsive size based on viewport
+          mapContainerStyle={{ width: '83vw', height: '93vh', position: 'absolute', }} // Responsive size based on viewport
           center={mapCenter}
-          zoom={10}
+          zoom={14.3}
           onClick={(event) => setMapCenter(event.latLng)} // Update map center on click
         >
 
@@ -116,4 +116,4 @@ const MapS = (props) => {
   );
 };
 
-export default MapS;
+export default Map;

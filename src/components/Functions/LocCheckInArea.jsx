@@ -18,11 +18,8 @@ function LocCheckInArea(props) {
         }
     }
 
-    console.log(props)
-
     // Check if the inputted location is inside the polygon
     const isInsidePolygon = window.google.maps.geometry.poly.containsLocation(new window.google.maps.LatLng(props.checkLat, props.checkLng), new window.google.maps.Polygon({ paths: getArea(props.checkarea) }));
-
 
     return isInsidePolygon
 }

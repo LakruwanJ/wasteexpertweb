@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import Card1 from '../Basic/Card1'
-import Map from '../main/Map'
+import MapSchedules from './MapSchedules'
 import AddNewScheduleForm from '../main/AddNewScheduleForm'
 
 function AddSchedule() {
+  const [selectedArea, setSelectedArea] = useState('');
+  const [reloadMap, setReloadMap] = useState(false);
 
-  function Side2() {
+  const handleReloadMap = () => {
+    setReloadMap(!reloadMap);
+  };
+
+  const handleAreaChange = (area) => {
+    setSelectedArea(area);
+  };
+
+  function Side2(reloadMap) {
     return (
       <div class="items-center md:mt-8 flex">
-        <Map />
+        <MapSchedules selectedArea={selectedArea} reloadMap={reloadMap} />
       </div>
     )
   }
-  
+
   return (
     <div>
-      <Card1 side1={<AddNewScheduleForm />} side2={<Side2 />} />
+      <Card1
+        side1={<AddNewScheduleForm onAreaChange={handleAreaChange} onReloadMap={handleReloadMap} />}
+        side2={<Side2 reloadMap={reloadMap} />}
+      />
     </div>
   )
 
