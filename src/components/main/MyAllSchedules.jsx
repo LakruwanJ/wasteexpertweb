@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import foodbinL from '../Images/foodbinL.png';
+import glassbinL from '../Images/glassbinL.png';
+import metalbinL from '../Images/metalbinL.png';
+import paperbinL from '../Images/paperbinL.png';
+import plasticbinL from '../Images/plasticbinL.png';
 
-function ManageSchedules() {
+function MyAllSchedules() {
   const [shedulepickup, setShedulepickups] = useState([]);
   const [organizedPickupsL, setOrganizedPickupsL] = useState({});
+  const collector = '66901b082b62d03997fd3166';
 
   const fetchData = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/schedulePickup/getschedulepickup'); // Use Axios for GET request
-      setShedulepickups(response.data.shedulepickups);
+      const response = await axios.post('http://localhost:3001/schedulePickup/getSchedulePickupToCollector', { collector });
+      setShedulepickups(response.data.schedulePickups); // Ensure consistency with server response
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -43,6 +49,7 @@ function ManageSchedules() {
     <>
       {/*<!-- Component: Basic accordion --> */}
       <section className="w-full divide-y rounded divide-slate-200">
+        {console.log('a', organizedPickupsL)}
         {/* Display organized pickups */}
         {Object.entries(organizedPickupsL).map(([date, pickups]) => (
           <details key={date} className="p-4 group" open>
@@ -70,13 +77,41 @@ function ManageSchedules() {
             </summary>
             {pickups.map((pickup, index) => (
               <div key={index} className="mt-4 text-slate-500">
-                <p> <b>Collector ID : </b>{pickup.collector} <br /> <b>Status : </b>{pickup.Status}</p>
-                <p><b>id : {pickup.id} :</b></p>
-                <ul>
-                  {pickup.garbageTypes.map((type, idx) => (
-                    <li key={idx}>{type}</li>
-                  ))}
-                </ul>
+                <p> <b>{pickup.area}</b></p>
+                <div className="container px-6 m-auto">
+                  <div className="grid grid-cols-8 gap-6 md:grid-cols-12 lg:grid-cols-12">
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={foodbinL} alt="Logo" className="h-13" />
+                        {pickup.quantity['Organic']}
+                      </center>
+                    </div>
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={glassbinL} alt="Logo" className="h-13" />
+                        {pickup.quantity['Glass']}
+                      </center>
+                    </div>
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={metalbinL} alt="Logo" className="h-13" />
+                        {pickup.quantity['Metal']}
+                      </center>
+                    </div>
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={paperbinL} alt="Logo" className="h-13" />
+                        {pickup.quantity['Paper']}
+                      </center>
+                    </div>
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={plasticbinL} alt="Logo" className="h-13" />
+                        {pickup.quantity['Plastic']}
+                      </center>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </details>
@@ -87,4 +122,4 @@ function ManageSchedules() {
   );
 }
 
-export default ManageSchedules;
+export default MyAllSchedules;

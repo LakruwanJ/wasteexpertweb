@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GetAreaForLoc from '../Functions/GetAreaForLoc';
-import useGoogleMaps from '../Hooks/useGoogleMaps'
-import GetQuantityByCate from '../Functions/GetQuantityByCate';
 
-const ScheduleLocInArea = () => {
+const ScheduleLocInArea = (area) => {
     const [sortedScheduleWaste, setSortedScheduleWaste] = useState({
       Area1: [],
       Area2: [],
       Area3: [],
       Area4: [],
     });
-    const [sortedScheduleWasteBycate, setSortedScheduleWasteBycate] = useState({
-      Area1: [],
-      Area2: [],
-      Area3: [],
-      Area4: [],
-    });
-  const isGoogleMapsLoaded = useGoogleMaps('AIzaSyBG3Ua3R0x4emKkYNkGan-Ds2dDvFUaEmM'); // Replace with your API key
 
   // Fetch schedules from the database
   const fetchScheduleWaste = async () => {
@@ -48,16 +39,10 @@ const ScheduleLocInArea = () => {
   };
 
   useEffect(() => {
-    if (isGoogleMapsLoaded) {
       fetchScheduleWaste();
-    }
-  }, [isGoogleMapsLoaded]);
+  }, []);
 
-  return (
-    <div>
-      {console.log(GetQuantityByCate(sortedScheduleWaste.Area1))}
-    </div>
-  );
+  return sortedScheduleWaste
 };
 
 export default ScheduleLocInArea;

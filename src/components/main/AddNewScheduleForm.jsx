@@ -4,22 +4,24 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 //data
 import { areas } from '../Data/AreaNames';
 import { tsu, ter } from '../Functions/ResponseToste';
+//functions
+import GetAreaForLoc from '../Functions/GetAreaForLoc';
+import GetQuantityByCate from '../Functions/GetQuantityByCate';
 
 function AddNewScheduleForm({ onAreaChange, onReloadMap }) {
-
     const [formData, setFormData] = useState({
         area: '',
         date: '',
         collector: '',
-        garbageTypes: '',
+        locations: [],
+        quantity: []
     });
 
+    //get collectors
     const [colData, setColData] = useState([]);
-
     const fetchData = async (callback) => {
         try {
             const response = await axios.post('http://localhost:3001/addCollector/getAllCol'); // Use Axios for GET request
@@ -30,8 +32,8 @@ function AddNewScheduleForm({ onAreaChange, onReloadMap }) {
         }
     };
 
+    //map collectors
     const collectors = [];
-
     colData.forEach(item => {
         collectors.push({
             name: item.username,
@@ -41,38 +43,12 @@ function AddNewScheduleForm({ onAreaChange, onReloadMap }) {
     });
 
     useEffect(() => {
-        fetchData(() => {
-        });
+        fetchData(() => { });
+        fetchScheduleWaste();
     }, []);
-
-    const garbagetype = [
-        { value: 1, name: 'Glass' },
-        { value: 2, name: 'Plastics' },
-        { value: 3, name: 'Paper' },
-        { value: 3, name: 'Organic' },
-        { value: 3, name: 'Metal' },
-
-    ];
 
     const handleChange = (event) => {
         const { name, type, checked } = event.target;
-
-        if (type === 'checkbox') {
-            const selectedGarbageTypes = formData.garbageTypes.split(',');
-
-            if (checked) {
-                selectedGarbageTypes.push(event.target.value);
-            } else {
-                const index = selectedGarbageTypes.indexOf(event.target.value);
-                selectedGarbageTypes.splice(index, 1);
-            }
-
-            setFormData((prevData) => ({
-                ...prevData,
-                garbageTypes: selectedGarbageTypes.join(','),
-            }));
-            return;
-        }
 
         setFormData((prevData) => ({
             ...prevData,
@@ -80,9 +56,78 @@ function AddNewScheduleForm({ onAreaChange, onReloadMap }) {
         }));
 
         if (name === 'area') {
-            onAreaChange(event.target.value);
-        }
+            setFormData(prevData => ({
+                ...prevData,
+                locations: []
+            }));
 
+            onAreaChange(event.target.value);
+
+            if (event.target.value == 'Area 1') {
+                setFormData(prevData => ({
+                    ...prevData,
+                    locations: sortedScheduleWaste.Area1,
+                    quantity: GetQuantityByCate(sortedScheduleWaste.Area1)
+                }));
+            }
+            if (event.target.value == 'Area 2') {
+                setFormData(prevData => ({
+                    ...prevData,
+                    locations: sortedScheduleWaste.Area2,
+                    quantity: GetQuantityByCate(sortedScheduleWaste.Area2)
+                }));
+            }
+            if (event.target.value == 'Area 3') {
+                setFormData(prevData => ({
+                    ...prevData,
+                    locations: sortedScheduleWaste.Area3,
+                    quantity: GetQuantityByCate(sortedScheduleWaste.Area3)
+                }));
+            }
+            if (event.target.value == 'Area 4') {
+                setFormData(prevData => ({
+                    ...prevData,
+                    locations: sortedScheduleWaste.Area4,
+                    quantity: GetQuantityByCate(sortedScheduleWaste.Area4)
+                }));
+            }
+            console.log(formData.locations)
+        }
+    };
+
+    //sort Schedules according to areas while fetching
+    const [sortedScheduleWaste, setSortedScheduleWaste] = useState({
+        Area1: [],
+        Area2: [],
+        Area3: [],
+        Area4: [],
+    });
+    const fetchScheduleWaste = async () => {
+        try {
+            const response = await axios.post('http://localhost:3001/schedule/getAllScheduleWaste');
+            const allScheduleWaste = response.data.allScheduleWaste;
+
+            const sortedData = {
+                Area1: [],
+                Area2: [],
+                Area3: [],
+                Area4: [],
+            };
+
+            allScheduleWaste.forEach((item) => {
+                const area = GetAreaForLoc({ checkLat: item.location.lat, checkLng: item.location.lng });
+
+                console.log(area);
+                if (area) {
+                    sortedData[area].push(item);
+                }
+            });
+
+            setSortedScheduleWaste(sortedData);
+            console.log(sortedScheduleWaste)
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     };
 
     const handleAddSchedule = async (event) => {
@@ -92,27 +137,41 @@ function AddNewScheduleForm({ onAreaChange, onReloadMap }) {
         if (true) {
             try {
                 const response = await axios.post('http://localhost:3001/schedulePickup/newschedulepickup', { formData });
-                console.log(response.data); // Assuming your response has data
+
+                //update db - http://localhost:3001/schedulee/upsateschedule
+                for (const location of formData.locations) {
+                    await updateScheduleDatabase(location["id"],formData.date);
+                }
+
                 tsu('New Schedule Pickup Added');
                 onReloadMap(); // Trigger reload after successful addition
                 //clear form
                 setFormData({
                     area: '',
-                    locationLat: '',
-                    locationLng: '',
-                    garbageTypes: '',
-                    fillLevel: '0',
+                    date: '',
+                    collector: '',
+                    locations: [],
+                    quantity: []
                 });
+                //resetmap selected area
+                onAreaChange();
 
-                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                checkboxes.forEach((checkbox) => checkbox.checked = false);
+
             } catch (error) {
                 console.error('Error Adding schedule:', error);
                 ter('Error Adding schedule Pickup')
             }
-
         } else {
             ter('err')
+        }
+    };
+
+    const updateScheduleDatabase = async (id,date) => {
+        try {
+            const response = await axios.post('http://localhost:3001/schedule/updateScheduleState', { id,date });
+            console.log('Schedule updated:', response.data);
+        } catch (error) {
+            console.error('Error updating schedule:', error);
         }
     };
 
@@ -145,40 +204,17 @@ function AddNewScheduleForm({ onAreaChange, onReloadMap }) {
                     <label htmlFor="price" className="block text-md font-medium leading-4 text-gray-900 pb-5">
                         Select Garbage Types
                     </label>
-                    <div>
-                        {garbagetype.map((type) => (
-                            <div className="relative flex flex-wrap items-center">
-                                <input className="peer h-4 w-4 cursor-pointer appearance-none rounded border-2 border-slate-500 bg-white transition-colors checked:border-emerald-500 checked:bg-emerald-500 checked:hover:border-emerald-600 checked:hover:bg-emerald-600 focus:outline-none checked:focus:border-emerald-700 checked:focus:bg-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50"
-                                    type="checkbox" name="garbageTypes" value={type.name} onChange={handleChange} />
-                                <label className="cursor-pointer pl-2 text-slate-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400"
-                                    htmlFor="id-c01" key={type.value}>
-                                    {type.name}
-                                </label>
-                                <svg className="pointer-events-none absolute left-0 top-1 h-4 w-4 -rotate-90 fill-white stroke-white opacity-0 transition-all duration-300 peer-checked:rotate-0 peer-checked:opacity-100 peer-disabled:cursor-not-allowed"
-                                    viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" aria-labelledby="title-1 description-1" role="graphics-symbol" >
-                                    <path fillRule="evenodd" clipRule="evenodd"
-                                        d="M12.8116 5.17568C12.9322 5.2882 13 5.44079 13 5.5999C13 5.759 12.9322 5.91159 12.8116 6.02412L7.66416 10.8243C7.5435 10.9368 7.37987 11 7.20925 11C7.03864 11 6.87501 10.9368 6.75435 10.8243L4.18062 8.42422C4.06341 8.31105 3.99856 8.15948 4.00002 8.00216C4.00149 7.84483 4.06916 7.69434 4.18846 7.58309C4.30775 7.47184 4.46913 7.40874 4.63784 7.40737C4.80655 7.406 4.96908 7.46648 5.09043 7.57578L7.20925 9.55167L11.9018 5.17568C12.0225 5.06319 12.1861 5 12.3567 5C12.5273 5 12.691 5.06319 12.8116 5.17568Z"
-                                    />
-                                </svg>
-                            </div>
-                        ))}
+
+                    <div className="p-3">
+                        <button className="block w-full rounded-lg bg-emerald-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-emerald-600">
+                            Add New Schedule Pickup
+                        </button>
                     </div>
-
-                    <hr className="h-px my-8 bg-black border-0 dark:bg-gray-700" />
-
-                    <button Type="submit" className="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-5 text-sm font-medium tracking-wide text-white shadow-md shadow-emerald-200 transition duration-300 hover:bg-emerald-600 hover:shadow-sm hover:shadow-emerald-200 focus:bg-emerald-700 focus:shadow-sm focus:shadow-emerald-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:border-emerald-300 disabled:bg-emerald-300 disabled:shadow-none">
-                        <span className="relative only:-mx-5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" alt="a">
-                            <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192zm176 40c-13.3 0-24 10.7-24 24v48H152c-13.3 0-24 10.7-24 24s10.7 24 24 24h48v48c0 13.3 10.7 24 24 24s24-10.7 24-24V352h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H248V256c0-13.3-10.7-24-24-24z" /></svg>
-                        </span>
-                        <span>Add New Schedule</span>
-                    </button>
-
-                    <ToastContainer
-                    />
                 </form>
             </div>
+            <ToastContainer />
         </div>
-    )
+    );
 }
 
-export default AddNewScheduleForm
+export default AddNewScheduleForm;

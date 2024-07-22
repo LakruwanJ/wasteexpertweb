@@ -3,27 +3,93 @@ import {
   GoogleMap,
   LoadScript,
   MarkerF,
-  Polygon
+  Polygon,
+  DirectionsRenderer
 } from '@react-google-maps/api';
-import pointInPolygon from 'point-in-polygon';
-//Images
+// Images
 import foodbin from '../Images/foodbin.png';
 import glassbincon from '../Images/glassbin.png';
 import metalbin from '../Images/metalbin.png';
 import paperbin from '../Images/paperbin.png';
 import plasticbin from '../Images/plasticbin.png';
 import sched from '../Images/schedule.png';
+import Optsched from '../Images/Optschedule.png';
+import ps from '../Images/ps.png';
 import { area1, area2, area3, area4 } from '../Data/Areas';
 
 const API_KEY = 'AIzaSyBG3Ua3R0x4emKkYNkGan-Ds2dDvFUaEmM';
 
 const MapS = (props) => {
+  const [mapCenter, setMapCenter] = useState({ lat: 6.760744676601805, lng: 81.24733849300866 }); // Initial center
+  const [collectorRoute, setCollectorRoute] = useState([]);
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [markers, setMarkers] = useState([]);
+  const [waypoints, setWaypoints] = useState([]);
 
-  const [mapCenter, setMapCenter] = useState({ lat: 6.760755838476916, lng: 81.24733702841034 }); // Initial center
+  useEffect(() => {
+    if (props.props.collectorRoot.locations) {
+      const waypointsArray = props.props.collectorRoot.locations.map(item => ({
+        location: new window.google.maps.LatLng(item.location.lat, item.location.lng),
+        stopover: true
+      }));
+      setWaypoints(waypointsArray);
+    }
+  }, [props.props.collectorRoot.locations]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const calculateBestRoute = () => {
+      if (!window.google) {
+        console.error('Google maps not loaded');
+        return;
+      }
 
-  function getImageForBinType(binType) {//select image for markerF
+      const directionsService = new window.google.maps.DirectionsService();
+      directionsService.route(
+        {
+          origin: mapCenter,
+          destination: mapCenter,
+          waypoints: waypoints,
+          travelMode: 'DRIVING',
+          optimizeWaypoints: true,
+          drivingOptions: {
+            departureTime: new Date(), // Set the departure time to now
+            trafficModel: 'bestguess' // Other options: 'pessimistic', 'optimistic'
+          }
+        },
+        (response, status) => {
+          if (status === 'OK') {
+            console.log('Directions response:', response);
+            setDirectionsResponse(response);
+
+            // Extract the optimized waypoints
+            const optimizedWaypoints = response.routes[0].waypoint_order;
+            const newMarkers = [
+              mapCenter,
+              ...optimizedWaypoints.map(index => waypoints[index].location),
+              mapCenter
+            ];
+
+            setMarkers(newMarkers);
+          } else {
+            console.error('Directions request failed due to ' + status);
+          }
+        }
+      );
+    };
+
+    if (window.google) {
+      calculateBestRoute();
+    } else {
+      const interval = setInterval(() => {
+        if (window.google) {
+          calculateBestRoute();
+          clearInterval(interval);
+        }
+      }, 100);
+    }
+  }, [mapCenter, waypoints]);
+
+  function getImageForBinType(binType) {
     switch (binType) {
       case 'food':
         return foodbin;
@@ -37,12 +103,14 @@ const MapS = (props) => {
         return plasticbin;
       case 'sched':
         return sched;
+      case 'optSche':
+        return Optsched;
       default:
         return null;
     }
   }
 
-  function getArea(area) {//select area for polygon
+  function getArea(area) {
     switch (area) {
       case 'area1':
         return area1;
@@ -59,56 +127,70 @@ const MapS = (props) => {
 
   return (
     <>
-      <LoadScript
-        googleMapsApiKey={API_KEY}
-        libraries={['places' , 'geometry']} // Add 'places' library for user location search (optional)
-      >
+    {console.log(markers)}
+      <LoadScript googleMapsApiKey={API_KEY} libraries={['places', 'geometry']}>
         <GoogleMap
-          mapContainerStyle={{ width: '83.5vw', height: '94vh', position: 'absolute', }} // Responsive size based on viewport
+          mapContainerStyle={{ width: '83.5vw', height: '94vh', position: 'absolute' }} // Responsive size based on viewport
           center={mapCenter}
           zoom={10}
-          onClick={(event) => setMapCenter(event.latLng)} // Update map center on click
         >
-
-          {/* show areas */}
-          {props.props['selections'] ?
-            props.props['selections'].map((item) => (
-              <Polygon paths={getArea(item)}
+          {/* Show areas */}
+          {props.props.selections &&
+            props.props.selections.map((item, index) => (
+              <Polygon
+                key={index}
+                paths={getArea(item)}
                 options={{ fillColor: '#FF0000', fillOpacity: 0.35, strokeColor: '#FF0000', strokeOpacity: 0.8, strokeWeight: 2 }}
               />
-            )) : null}
+            ))}
 
-          {/* show bins, shedules -------- start */}
-          {props.props['foodbinLocation'] ?
-            props.props['foodbinLocation'].map((item) => (
-              <MarkerF key="kandy" position={item.loc} title="Kandy" icon={getImageForBinType(props.props["type1"])} ></MarkerF>
-            )) : null}
+          {/* Show bins */}
+          {props.props.foodbinLocation &&
+            props.props.foodbinLocation.map((item, index) => (
+              <MarkerF key={index} position={item.loc} title="Food Bin" icon={getImageForBinType(props.props.type1)} />
+            ))}
 
-          {props.props['glassbinLocation'] ?
-            props.props['glassbinLocation'].map((item) => (
-              <MarkerF key="kandy" position={item.loc} title="Kandy" icon={getImageForBinType(props.props["type2"])} ></MarkerF>
-            )) : null}
+          {props.props.glassbinLocation &&
+            props.props.glassbinLocation.map((item, index) => (
+              <MarkerF key={index} position={item.loc} title="Glass Bin" icon={getImageForBinType(props.props.type2)} />
+            ))}
 
-          {props.props['glassbinLocation'] ?
-            props.props['glassbinLocation'].map((item) => (
-              <MarkerF key="kandy" position={item.loc} title="Kandy" icon={getImageForBinType(props.props["type3"])} ></MarkerF>
-            )) : null}
+          {props.props.glassbinLocation &&
+            props.props.glassbinLocation.map((item, index) => (
+              <MarkerF key={index} position={item.loc} title="Glass Bin" icon={getImageForBinType(props.props.type3)} />
+            ))}
 
-          {props.props['paperbinLocation'] ?
-            props.props['paperbinLocation'].map((item) => (
-              <MarkerF key="kandy" position={item.loc} title="Kandy" icon={getImageForBinType(props.props["type4"])} ></MarkerF>
-            )) : null}
+          {props.props.paperbinLocation &&
+            props.props.paperbinLocation.map((item, index) => (
+              <MarkerF key={index} position={item.loc} title="Paper Bin" icon={getImageForBinType(props.props.type4)} />
+            ))}
 
-          {props.props['plasticbinLocation'] ?
-            props.props['plasticbinLocation'].map((item) => (
-              <MarkerF key="kandy" position={item.loc} title="Kandy" icon={getImageForBinType(props.props["type5"])} ></MarkerF>
-            )) : null}
+          {props.props.plasticbinLocation &&
+            props.props.plasticbinLocation.map((item, index) => (
+              <MarkerF key={index} position={item.loc} title="Plastic Bin" icon={getImageForBinType(props.props.type5)} />
+            ))}
 
-          {props.props['ScheduleWaste'] ?
-            props.props['ScheduleWaste'].map((item) => (
-              <MarkerF key="kandy" position={item.location} title="Kandy" icon={getImageForBinType(props.props["Imagee1"])} ></MarkerF>
-            )) : null}
-          {/* show bins, shedules -------- end */}
+          {/* Show raw schedules */}
+          {props.props.ScheduleWaste &&
+            props.props.ScheduleWaste.map((item, index) => (
+              <MarkerF key={index} position={item.location} title="Schedule" icon={getImageForBinType(props.props.Imagee1)} />
+            ))}
+
+          {/* Show optimized schedules */}
+          {props.props.collectorRoot && (
+            <DirectionsRenderer options={{ directions: directionsResponse }} />
+          )}
+
+          {props.props.collectorRoot &&
+            markers.map((position, index) => (
+              <MarkerF
+                key={index}
+                position={position}
+                label={(index === 0 || index === markers.length - 1) ? 'S' : index.toString()} // 'S' for start or end, numbers for waypoints
+                icon={(index === 0 || index === markers.length - 1) ? ps : getImageForBinType(props.props.collectorRootI)}
+                onClick={() => console.log(position)} // Add this line to print index in console when marker is clicked
+              />
+            ))}
 
         </GoogleMap>
       </LoadScript>
