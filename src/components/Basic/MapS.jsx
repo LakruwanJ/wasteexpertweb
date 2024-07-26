@@ -16,6 +16,7 @@ import sched from '../Images/schedule.png';
 import Optsched from '../Images/Optschedule.png';
 import ps from '../Images/ps.png';
 import { area1, area2, area3, area4 } from '../Data/Areas';
+import UpdateUserSchedules from '../main/UpdateUserSchedules';
 
 const API_KEY = 'AIzaSyBG3Ua3R0x4emKkYNkGan-Ds2dDvFUaEmM';
 
@@ -25,6 +26,11 @@ const MapS = (props) => {
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [waypoints, setWaypoints] = useState([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clickedMarkerIndex, setClickedMarkerIndex] = useState(null); // New state for clicked marker index
+  const [clickedMarkerData, setClickedMarkerData] = useState(null); // New state for clicked marker data
+
 
   useEffect(() => {
     if (props.props.collectorRoot.locations) {
@@ -89,6 +95,19 @@ const MapS = (props) => {
     }
   }, [mapCenter, waypoints]);
 
+  const openModal = (index, data) => {
+    setClickedMarkerIndex(index); // Set the clicked marker index
+    setClickedMarkerData(data); // Set the clicked marker data
+    setIsModalOpen(true);
+    console.log('Opening modal with data:', data);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setClickedMarkerIndex(null); // Clear the clicked marker index when closing the modal
+    setClickedMarkerData(null); // Clear the clicked marker data when closing the modal
+  };
+
   function getImageForBinType(binType) {
     switch (binType) {
       case 'food':
@@ -125,9 +144,19 @@ const MapS = (props) => {
     }
   }
 
+  function getLocationWithCoordinates(data, targetLat, targetLng) {
+    if (!data.locations || !Array.isArray(data.locations)) {
+      throw new Error("Invalid data format: 'locations' property is missing or not an array.");
+    }
+    const locationData = data.locations.find(location =>
+      location.location.lat === targetLat && location.location.lng === targetLng
+    );
+    return locationData;
+  }
+
   return (
     <>
-    {console.log(markers)}
+      {console.log(markers)}
       <LoadScript googleMapsApiKey={API_KEY} libraries={['places', 'geometry']}>
         <GoogleMap
           mapContainerStyle={{ width: '83.5vw', height: '94vh', position: 'absolute' }} // Responsive size based on viewport
@@ -181,6 +210,7 @@ const MapS = (props) => {
             <DirectionsRenderer options={{ directions: directionsResponse }} />
           )}
 
+          {console.log('aaa', markers)}
           {props.props.collectorRoot &&
             markers.map((position, index) => (
               <MarkerF
@@ -188,9 +218,18 @@ const MapS = (props) => {
                 position={position}
                 label={(index === 0 || index === markers.length - 1) ? 'S' : index.toString()} // 'S' for start or end, numbers for waypoints
                 icon={(index === 0 || index === markers.length - 1) ? ps : getImageForBinType(props.props.collectorRootI)}
-                onClick={() => console.log(position)} // Add this line to print index in console when marker is clicked
+                onClick={() => {
+                  // Get the location data associated with the clicked marker
+                  const markerData = getLocationWithCoordinates(props.props.collectorRoot, position.lat(), position.lng());
+                  console.log('Clicked marker location:', { lat: position.lat(), lng: position.lng() });
+                  console.log('Associated location data:', markerData);
+                  openModal(index, markerData);
+                }} // Pass the index and data to openModal
               />
             ))}
+
+          {/* Modal */}
+          <UpdateUserSchedules open={isModalOpen} onClose={closeModal} markerIndex={clickedMarkerIndex} markerData={clickedMarkerData} />
 
         </GoogleMap>
       </LoadScript>
