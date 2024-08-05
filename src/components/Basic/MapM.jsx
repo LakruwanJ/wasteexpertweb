@@ -106,7 +106,7 @@ const Map = (props) => {
 
           {props.props['ScheduleWaste'] ?
             props.props['ScheduleWaste'].map((item) => (
-              <MarkerF key="kandy" position={item.location} title="Kandy" icon={getImageForBinType(props.props["Imagee1"])} ></MarkerF>
+              <MarkerF key="kandy" position={item.location} title={item.id} icon={getImageForBinType(props.props["Imagee1"])} ></MarkerF>
             )) : null}
           {/* show bins, shedules -------- end */}
 

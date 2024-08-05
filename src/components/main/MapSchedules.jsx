@@ -72,7 +72,7 @@ function MapSchedules({ selectedArea,reloadMap  }) {
 
   return (
     <div className="absolute w-54vw h-90vh ">
-      {'abcd'+ console.log(scheduleWaste)}
+      {console.log("aaaaa",scheduleWaste)}
       <MapM props={
         {
         type1: "food", foodbinLocation: binTypes.Organic,
