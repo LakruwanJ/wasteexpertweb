@@ -229,7 +229,15 @@ const MapS = (props) => {
             ))}
 
           {/* Modal */}
-          <UpdateUserSchedules open={isModalOpen} onClose={closeModal} markerIndex={clickedMarkerIndex} markerData={clickedMarkerData} />
+          <UpdateUserSchedules
+            open={isModalOpen}
+            onClose={closeModal}
+            markerIndex={clickedMarkerIndex}
+            markerData={clickedMarkerData}
+            todaySchedule={props.props.collectorRoot}
+          />
+
+          {/* <UpdateUserSchedules open={isModalOpen} onClose={closeModal} markerIndex={clickedMarkerIndex} markerData={clickedMarkerData} todaySchedule={props.props.collectorRoot} /> */}
 
         </GoogleMap>
       </LoadScript>
