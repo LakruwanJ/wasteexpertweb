@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function UpdateUserSchedules({ open, onClose, markerIndex, markerData }) {
+function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySchedule, onScheduleUpdate }) {
     const userId = markerData?.UserId || "N/A";
     const wasteTypes = markerData?.WasteType || [];
 
@@ -25,7 +25,6 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData }) {
     }, [wasteTypes]);
 
     const handleChange = (e) => {
-        console.log(formData)
         const { name, value } = e.target;
         setFormData(prevFormData => ({
             ...prevFormData,
@@ -34,32 +33,44 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData }) {
     };
 
     const handleCollect = async () => {
-        // Transform formData into an array of objects
         const wasteTypesArray = Object.keys(formData).map(key => ({
             wastetype: key,
-            quantity: parseFloat(formData[key]) // Ensure quantity is a number
+            quantity: parseFloat(formData[key])
         }));
-    
-        console.log('Transformed wasteTypes:', wasteTypesArray);
-    
+
+        const today = new Date().toISOString();
+
         try {
             const response = await axios.post('http://localhost:3001/schedule/updateScheduleStateToFinish', {
                 id: markerData.id,
-                date: new Date().toISOString(),
+                date: today,
                 wasteTypes: wasteTypesArray,
             });
             console.log('Schedule updated:', response.data);
             toast.success('Schedule updated successfully!');
+
+            // Update the todaySchedule object
+            const updatedSchedule = { ...todaySchedule };
+            const userSchedule = updatedSchedule.locations.find(loc => loc.UserId === userId);
+            if (userSchedule) {
+                userSchedule.WasteType = wasteTypesArray;
+                userSchedule.ScheduleState = "complete"; // Update the schedule status to complete
+                userSchedule.ScheduledDate = today; // Update the schedule date to today
+            }
+
+            console.log(updatedSchedule);
+
+            onScheduleUpdate(updatedSchedule); // Call the callback to refresh the schedule
+
         } catch (error) {
             console.error('Error updating schedule:', error);
             toast.error('Failed to update schedule.');
         }
-        
     };
-    
 
     return (
         <div className={`w-full h-full bg-gray-600/45 absolute flex-row items-center justify-center left-0 top-0 z-50 transition-transform ${open ? "flex" : "hidden"}`}>
+            {console.log(todaySchedule)}
             <div className="bg-white rounded-xl relative w-1/2 p-4">
                 <header id="header-1a" className="flex items-center gap-4">
                     <h3 className="flex-1 text-xl font-medium text-slate-700">Collect Waste</h3>
