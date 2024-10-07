@@ -57,15 +57,18 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
                 userSchedule.ScheduleState = "complete"; // Update the schedule status to complete
                 userSchedule.ScheduledDate = today; // Update the schedule date to today
             }
-
             console.log(updatedSchedule);
-
             onScheduleUpdate(updatedSchedule); // Call the callback to refresh the schedule
 
         } catch (error) {
             console.error('Error updating schedule:', error);
             toast.error('Failed to update schedule.');
         }
+
+        {console.log("abcd",todaySchedule)}
+
+        
+
     };
 
     return (
