@@ -19,7 +19,7 @@ const CollectorLogin = () => {
       if (response.data.status) {
         localStorage.setItem("token", response.data.token);
         alert("Login successful");
-        navigate("/collector-dashboard");
+        navigate("/Collector");
       } else {
         alert(response.data.error);
       }
