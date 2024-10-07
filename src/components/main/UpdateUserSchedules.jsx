@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySchedule, onScheduleUpdate }) {
     const userId = markerData?.UserId || "N/A";
     const wasteTypes = markerData?.WasteType || [];
+    const scheduleState = markerData?.ScheduleState || "";
 
     const [formData, setFormData] = useState(() => {
         const initialFormData = wasteTypes.reduce((acc, waste) => {
@@ -49,6 +50,8 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
             console.log('Schedule updated:', response.data);
             toast.success('Schedule updated successfully!');
 
+            console.log(markerData.id)
+
             // Update the todaySchedule object
             const updatedSchedule = { ...todaySchedule };
             const userSchedule = updatedSchedule.locations.find(loc => loc.UserId === userId);
@@ -57,8 +60,20 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
                 userSchedule.ScheduleState = "complete"; // Update the schedule status to complete
                 userSchedule.ScheduledDate = today; // Update the schedule date to today
             }
-
             console.log(updatedSchedule);
+
+            try {
+                const response = await axios.post('http://localhost:3001/schedulePickup/updateScheduleLocationInPickup', {
+                    id: "66b1189b733a1828c4f3ccc2",
+                    locationId: markerData.id,
+                    wasteTypes: wasteTypesArray
+                });
+                console.log('Schedule Location data updated:', response.data);
+                toast.success('Schedule updated successfully!');
+            } catch (error) {
+                console.error('Error updating schedule:', error);
+                toast.error('Failed to update schedule.');
+            }
 
             onScheduleUpdate(updatedSchedule); // Call the callback to refresh the schedule
 
@@ -70,7 +85,6 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
 
     return (
         <div className={`w-full h-full bg-gray-600/45 absolute flex-row items-center justify-center left-0 top-0 z-50 transition-transform ${open ? "flex" : "hidden"}`}>
-            {console.log(todaySchedule)}
             <div className="bg-white rounded-xl relative w-1/2 p-4">
                 <header id="header-1a" className="flex items-center gap-4">
                     <h3 className="flex-1 text-xl font-medium text-slate-700">Collect Waste</h3>
@@ -119,12 +133,21 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
                 </div>
                 <br />
                 <div className="flex justify-start gap-2">
-                    <button onClick={handleCollect} className="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-5 text-sm font-medium tracking-wide text-white transition duration-300 hover:bg-emerald-600 focus:bg-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:border-emerald-300 disabled:bg-emerald-300 disabled:shadow-none">
-                        <span>Collect</span>
-                    </button>
-                    <button onClick={onClose} className="inline-flex h-10 items-center justify-center gap-2 justify-self-center whitespace-nowrap rounded px-5 text-sm font-medium tracking-wide text-emerald-500 transition duration-300 hover:bg-emerald-100 hover:text-emerald-600 focus:bg-emerald-200 focus:text-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-emerald-300 disabled:shadow-none disabled:hover:bg-transparent">
-                        <span>Decline</span>
-                    </button>
+                    {scheduleState === "Completed" ? (
+                        <button className="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded bg-gray-300 px-5 text-sm font-medium tracking-wide text-white cursor-not-allowed" disabled>
+                            <span>Already Collected</span>
+                        </button>
+                    ) : (
+                        <>
+                            <button onClick={handleCollect} className="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-5 text-sm font-medium tracking-wide text-white transition duration-300 hover:bg-emerald-600 focus:bg-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:border-emerald-300 disabled:bg-emerald-300 disabled:shadow-none">
+                                <span>Collect</span>
+                            </button>
+                            <button onClick={onClose} className="inline-flex h-10 items-center justify-center gap-2 justify-self-center whitespace-nowrap rounded px-5 text-sm font-medium tracking-wide text-emerald-500 transition duration-300 hover:bg-emerald-100 hover:text-emerald-600 focus:bg-emerald-200 focus:text-emerald-700 focus-visible:outline-none disabled:cursor-not-allowed disabled:text-emerald-300 disabled:shadow-none disabled:hover:bg-transparent">
+                                <span>Decline</span>
+                            </button>
+
+                        </>
+                    )}
                 </div>
             </div>
         </div>

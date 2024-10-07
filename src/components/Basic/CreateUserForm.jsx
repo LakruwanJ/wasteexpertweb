@@ -42,6 +42,13 @@ function CreateUserForm({ open, onClose, usertype }) {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+
   const addNewUser = async (event) => {
     event.preventDefault(); // Prevent default form submission
     console.log('formData:', formData);
@@ -66,7 +73,7 @@ function CreateUserForm({ open, onClose, usertype }) {
     try {
       const response = await axios.post(link, formData);
       console.log(response.data);
-      tsu('New '+ usertype+' Added');
+      tsu('New ' + usertype + ' Added');
       setFormData({
         username: '',
         password: '',
@@ -80,8 +87,8 @@ function CreateUserForm({ open, onClose, usertype }) {
       });
     } catch (error) {
       console.error('Error sending schedule:', error);
-      
-      ter('New '+ usertype+' Added');
+
+      ter('Error Adding New ' + usertype);
       // Handle specific error scenarios here (e.g., retry logic, user feedback)
     } finally {
       console.log('Data sent (or error occurred)'); // Informative message regardless of success or failure
@@ -112,10 +119,11 @@ function CreateUserForm({ open, onClose, usertype }) {
             Password
           </label>
           <div className="relative my-6">
-            <input type='text' name='password' value={formData.password} onChange={handleChange} required className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
+            <input type={showPassword ? 'text' : 'password'} name='password' value={formData.password} onChange={handleChange} required className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
             <label for="id-date07" className="absolute -top-2 left-2 z-[1] cursor-text px-2 text-xs text-slate-400 transition-all before:absolute before:left-0 before:top-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-sm peer-autofill:-top-2 peer-required:after:text-pink-500 peer-required:after:content-['\00a0*']  peer-focus:-top-2 peer-focus:cursor-default peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent">
               Enter Password
             </label>
+            <button type="button" onClick={togglePasswordVisibility} className="absolute right-3 top-2.5 text-slate-500 hover:text-emerald-500">{showPassword ? <i>Hide</i> : <i>Show</i>}</button>
           </div>
 
           <label htmlFor="price" className="block text-md font-medium leading-4 text-gray-900">
@@ -203,7 +211,7 @@ function CreateUserForm({ open, onClose, usertype }) {
             <span>Add New {usertype}</span>
           </button>
 
-          <ToastContainer/>
+          <ToastContainer />
         </form>
       </div>
     </div>
