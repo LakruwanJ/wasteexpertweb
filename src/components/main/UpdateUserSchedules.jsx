@@ -62,10 +62,26 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
             }
             console.log(updatedSchedule);
 
+            //update shedule pickup
             try {
                 const response = await axios.post('http://localhost:3001/schedulePickup/updateScheduleLocationInPickup', {
                     id: "66b1189b733a1828c4f3ccc2",
                     locationId: markerData.id,
+                    wasteTypes: wasteTypesArray
+                });
+                console.log('Schedule Location data updated:', response.data);
+                toast.success('Schedule updated successfully!');
+            } catch (error) {
+                console.error('Error updating schedule:', error);
+                toast.error('Failed to update schedule.');
+            }
+
+            //reward
+            try {
+                console.log(markerData.UserId,markerData.id,wasteTypesArray)
+                const response = await axios.post('http://localhost:3001/schedulePickup/updateScheduleLocationInPickup', {
+                    userId: markerData.UserId,
+                    scheduleId: markerData.id,
                     wasteTypes: wasteTypesArray
                 });
                 console.log('Schedule Location data updated:', response.data);
