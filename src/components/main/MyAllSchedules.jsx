@@ -45,13 +45,16 @@ function MyAllSchedules() {
     setOrganizedPickupsL(organizedPickups);
   }, [shedulepickup]);
 
+  // Sort the dates in descending order
+  const sortedDates = Object.keys(organizedPickupsL).sort((a, b) => new Date(b) - new Date(a));
+
   return (
     <>
       {/*<!-- Component: Basic accordion --> */}
       <section className="w-full divide-y rounded divide-slate-200">
-        {console.log('a', organizedPickupsL)}
+        {console.log('Organized Pickups:', organizedPickupsL)}
         {/* Display organized pickups */}
-        {Object.entries(organizedPickupsL).map(([date, pickups]) => (
+        {sortedDates.map(date => (
           <details key={date} className="p-4 group" open>
             <summary className="relative cursor-pointer list-none pr-8 font-medium text-slate-700 transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-900 [&::-webkit-details-marker]:hidden">
               {date}
@@ -75,9 +78,9 @@ function MyAllSchedules() {
                 />
               </svg>
             </summary>
-            {pickups.map((pickup, index) => (
+            {organizedPickupsL[date].map((pickup, index) => (
               <div key={index} className="mt-4 text-slate-500">
-                <p> <b>{pickup.area}</b></p>
+                <p><b>{pickup.area}  - {pickup.status}</b></p>
                 <div className="container px-6 m-auto">
                   <div className="grid grid-cols-8 gap-6 md:grid-cols-12 lg:grid-cols-12">
                     <div className="col-span-4 lg:col-span-2">

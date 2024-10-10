@@ -90,6 +90,7 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
                 console.error('Error updating schedule:', error);
                 toast.error('Failed to update schedule.');
             }
+            window.location.reload();
 
             onScheduleUpdate(updatedSchedule); // Call the callback to refresh the schedule
 

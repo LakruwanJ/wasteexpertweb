@@ -21,6 +21,7 @@ import UpdateUserSchedules from '../main/UpdateUserSchedules';
 const API_KEY = 'AIzaSyBG3Ua3R0x4emKkYNkGan-Ds2dDvFUaEmM';
 
 const MapS = (props) => {
+  const [loading, setLoading] = useState(true);
   const [mapCenter, setMapCenter] = useState({ lat: 6.760744676601805, lng: 81.24733849300866 }); // Initial center
   const [collectorRoute, setCollectorRoute] = useState([]);
   const [directionsResponse, setDirectionsResponse] = useState(null);
@@ -33,10 +34,9 @@ const MapS = (props) => {
 
   const [userLocation, setUserLocation] = useState(null);//live location
 
-
-
   useEffect(() => {
     if (props.props.collectorRoot.locations) {
+      console.log("aaaaa",props.props.collectorRoot.locations)
       const waypointsArray = props.props.collectorRoot.locations.map(item => ({
         location: new window.google.maps.LatLng(item.location.lat, item.location.lng),
         stopover: true
@@ -190,7 +190,13 @@ const MapS = (props) => {
   return (
     <>
       {console.log(markers)}
-      <LoadScript googleMapsApiKey={API_KEY} libraries={['places', 'geometry']}>
+      <LoadScript 
+      googleMapsApiKey={API_KEY} 
+      libraries={['places', 'geometry']}
+      onLoad={() => setLoading(false)} //Set loading to false on load
+      onError={() => console.error("Error loading Google Maps API")} //Error handling  
+      >
+         {!loading ? (
         <GoogleMap
           mapContainerStyle={{ width: '83.5vw', height: '94vh', position: 'absolute' }} // Responsive size based on viewport
           center={mapCenter}
@@ -283,6 +289,9 @@ const MapS = (props) => {
           {/* <UpdateUserSchedules open={isModalOpen} onClose={closeModal} markerIndex={clickedMarkerIndex} markerData={clickedMarkerData} todaySchedule={props.props.collectorRoot} /> */}
 
         </GoogleMap>
+  ) : (
+    <div>Loading Map...</div> // Loading message
+  )}
       </LoadScript>
     </>
   );
