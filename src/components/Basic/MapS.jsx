@@ -31,6 +31,9 @@ const MapS = (props) => {
   const [clickedMarkerIndex, setClickedMarkerIndex] = useState(null); // New state for clicked marker index
   const [clickedMarkerData, setClickedMarkerData] = useState(null); // New state for clicked marker data
 
+  const [userLocation, setUserLocation] = useState(null);//live location
+
+
 
   useEffect(() => {
     if (props.props.collectorRoot.locations) {
@@ -42,6 +45,7 @@ const MapS = (props) => {
     }
   }, [props.props.collectorRoot.locations]);
 
+  //root finding
   useEffect(() => {
     const calculateBestRoute = () => {
       if (!window.google) {
@@ -95,12 +99,41 @@ const MapS = (props) => {
     }
   }, [mapCenter, waypoints]);
 
+  //live location
+  useEffect(() => {
+    const getLocation = () => {
+
+      // setUserLocation({ lat: 6.766239204109132, lng: 81.24858990082943, });
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation({ lat: latitude, lng: longitude });
+          },
+          (error) => {
+            console.error("Error getting location: ", error);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+    };
+
+    getLocation();
+
+
+    // Optionally, you can set an interval to update the user's location
+    const intervalId = setInterval(getLocation, 10000); // Update every 10 seconds
+
+    return () => clearInterval(intervalId); // Clear interval on unmount
+  }, []);
   const openModal = (index, data) => {
     setClickedMarkerIndex(index); // Set the clicked marker index
     setClickedMarkerData(data); // Set the clicked marker data
     setIsModalOpen(true);
     console.log('Opening modal with data:', data);
   };
+
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -209,6 +242,16 @@ const MapS = (props) => {
           {props.props.collectorRoot && (
             <DirectionsRenderer options={{ directions: directionsResponse }} />
           )}
+
+
+          {userLocation && (
+            <MarkerF
+              position={userLocation}
+              title="Your Location"
+              icon={{ url: foodbin }} // Replace with your icon path
+            />
+          )}
+
 
           {console.log('aaa', markers)}
           {props.props.collectorRoot &&
