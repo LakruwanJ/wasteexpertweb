@@ -38,7 +38,7 @@ function AddNewScheduleForm({ onAreaChange, onReloadMap }) {
         collectors.push({
             name: item.username,
             vehicalNo: item.vehicalNo,
-            value: item.id
+            value: item._id
         });
     });
 

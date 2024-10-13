@@ -29,7 +29,7 @@ function MngColl() {
 
       <NewUser name={'Collector'}/>
       {colData.map((collector) => (
-        <UserCard user={collector}/>
+        <UserCard user={collector} type='Collector'/>
       ))}
     </div>
   </div>

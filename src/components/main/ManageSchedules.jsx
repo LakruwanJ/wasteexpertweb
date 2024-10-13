@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import foodbinL from '../Images/foodbinL.png';
+import glassbinL from '../Images/glassbinL.png';
+import metalbinL from '../Images/metalbinL.png';
+import paperbinL from '../Images/paperbinL.png';
+import plasticbinL from '../Images/plasticbinL.png';
 
 function ManageSchedules() {
   const [shedulepickup, setShedulepickups] = useState([]);
@@ -21,16 +26,11 @@ function ManageSchedules() {
   useEffect(() => {
     const organizedPickups = {};
     for (const pickup of shedulepickup) {
-      // Extract the date in YYYY-MM-DD format
       const dateString = pickup.date.slice(0, 10);
-      // If the date doesn't exist as a key, create an empty array for it
       if (!organizedPickups[dateString]) {
         organizedPickups[dateString] = [];
       }
-      // Convert garbageTypes string to an array, ensure it's defined
       const garbageTypesArray = pickup.garbageTypes ? pickup.garbageTypes.split(',') : [];
-
-      // Add the current pickup to the array for its date, with garbageTypes as an array
       organizedPickups[dateString].push({
         ...pickup,
         garbageTypes: garbageTypesArray,
@@ -39,12 +39,31 @@ function ManageSchedules() {
     setOrganizedPickupsL(organizedPickups);
   }, [shedulepickup]);
 
+  const sortedDates = Object.keys(organizedPickupsL).sort((a, b) => new Date(b) - new Date(a));
+
+  //handle delete
+  const handleDelete = async (_id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this schedule pickup?");
+    if (confirmed) {
+      try {
+        const response = await axios.post('http://localhost:3001/schedulePickup/deleteschedulepickup', { _id });
+        if (response.data.status) {
+          console.log("Schedule pickup deleted successfully");
+          fetchData(); // Refresh the data after deletion
+        } else {
+          console.error("Failed to delete schedule pickup:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error deleting schedule pickup:", error);
+      }
+    }
+  };
+
   return (
     <>
-      {/*<!-- Component: Basic accordion --> */}
       <section className="w-full divide-y rounded divide-slate-200">
-        {/* Display organized pickups */}
-        {Object.entries(organizedPickupsL).map(([date, pickups]) => (
+        {console.log('Organized Pickups:', organizedPickupsL)}
+        {sortedDates.map(date => (
           <details key={date} className="p-4 group" open>
             <summary className="relative cursor-pointer list-none pr-8 font-medium text-slate-700 transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-900 [&::-webkit-details-marker]:hidden">
               {date}
@@ -68,21 +87,60 @@ function ManageSchedules() {
                 />
               </svg>
             </summary>
-            {pickups.map((pickup, index) => (
+            {organizedPickupsL[date].map((pickup, index) => (
               <div key={index} className="mt-4 text-slate-500">
-                <p> <b>Collector ID : </b>{pickup.collector} <br /> <b>Status : </b>{pickup.Status}</p>
-                <p><b>id : {pickup.id} :</b></p>
-                <ul>
-                  {pickup.garbageTypes.map((type, idx) => (
-                    <li key={idx}>{type}</li>
-                  ))}
-                </ul>
+                <p><b>{pickup.area} - {pickup.status}</b></p>
+                <div className="container px-6 m-auto">
+                  <div className="grid grid-cols-8 gap-6 md:grid-cols-12 lg:grid-cols-12">
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={foodbinL} alt="Food bin" className="h-13" />
+                        {pickup.quantity['Organic']}
+                      </center>
+                    </div>
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={glassbinL} alt="Glass bin" className="h-13" />
+                        {pickup.quantity['Glass']}
+                      </center>
+                    </div>
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={metalbinL} alt="Metal bin" className="h-13" />
+                        {pickup.quantity['Metal']}
+                      </center>
+                    </div>
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={paperbinL} alt="Paper bin" className="h-13" />
+                        {pickup.quantity['Paper']}
+                      </center>
+                    </div>
+                    <div className="col-span-4 lg:col-span-2">
+                      <center>
+                        <img src={plasticbinL} alt="Plastic bin" className="h-13" />
+                        {pickup.quantity['Plastic']}
+                      </center>
+                    </div>
+                  </div>
+                  {/* Delete button */}
+                  <div className="flex justify-end mt-4">
+                    {console.log(pickup._id)}
+                    <button onClick={() => handleDelete(pickup._id)} className="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded bg-red-500 px-5 text-sm font-medium tracking-wide text-white shadow-md shadow-red-200 transition duration-300 hover:bg-red-600 hover:shadow-sm hover:shadow-red-200 focus:bg-red-700 focus:shadow-sm focus:shadow-red-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:border-red-300 disabled:bg-red-300 disabled:shadow-none">
+                      <span className="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" alt="Delete icon">
+                          <path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192zm176 40c-13.3 0-24 10.7-24 24v48H152c-13.3 0-24 10.7-24 24s10.7 24 24 24h48v48c0 13.3 10.7 24 24 24s24-10.7 24-24V352h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H248V256c0-13.3-10.7-24-24-24z" />
+                        </svg>
+                      </span>
+                      Delete Schedule
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </details>
         ))}
       </section>
-      {/*<!-- End Basic accordion --> */}
     </>
   );
 }

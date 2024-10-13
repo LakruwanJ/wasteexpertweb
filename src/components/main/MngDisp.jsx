@@ -29,7 +29,7 @@ function MngDisp() {
 
       <NewUser name={'Dispatcher'}/>
       {disData.map((admin) => (
-        <UserCard user={admin}/>
+        <UserCard user={admin} type='Dispatcher'/>
       ))}
     </div>
   </div>
