@@ -15,7 +15,7 @@ function SelectMenu({ Items, Title, NameVar, ValueVar, OnChangeVar }) {
                 >
                     <option value="" disabled selected></option>
                     {Items.map((item) => (
-                        <option key={item.value} value={item.value}>
+                        <option key={item.name} value={item.value}>
                             {item.vehicalNo ? item.name + ' (' + item.vehicalNo + ')': item.name}
                         </option>
                     ))}
