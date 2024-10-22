@@ -340,6 +340,7 @@ function UserCard({ user, type }) {
             user={user} 
             onClose={() => setIsEditing(false)} 
             onUpdate={handleUpdateUser} 
+            usertype={type}
           />
       )}
     </>
