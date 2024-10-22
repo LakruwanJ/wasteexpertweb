@@ -2,9 +2,11 @@ import React, { useState, useRef, useEffect } from "react"
 import ReactDOM from "react-dom"
 import userImg from "../Images/user.png"
 import axios from 'axios';
+import EditUserForm from './EditUserForm';
 
 function UserCard({ user, type }) {
   const [isShowing, setIsShowing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
   const [subject, setSubject] = useState("")
   const [message, setMessage] = useState("")
   const [isSending, setIsSending] = useState(false) // For loading state
@@ -165,7 +167,15 @@ function UserCard({ user, type }) {
       }
     }
   };
-  ;
+  
+    // Function to update user data
+    const handleUpdateUser = (updatedUser) => {
+      // Here you can handle the user data after it's updated
+      // For example, refresh the user data in the parent component
+      console.log("Updated User:", updatedUser);
+      // If needed, close the editing form
+      setIsEditing(false);
+    };
 
   return (
     <>
@@ -216,7 +226,10 @@ function UserCard({ user, type }) {
 
         {/* Other Buttons */}
         <div className="flex justify-end gap-2 p-6 pt-0">
-          <button className="inline-flex h-10 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-5 text-sm font-medium tracking-wide text-white transition duration-300 hover:bg-emerald-600 focus:bg-emerald-700 focus-visible:outline-none">
+        <button
+            onClick={() => setIsEditing(true)} // Set editing state to true
+            className="inline-flex h-10 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-5 text-sm font-medium tracking-wide text-white transition duration-300 hover:bg-emerald-600 focus:bg-emerald-700 focus-visible:outline-none"
+          >
             <span>Edit</span>
           </button>
           <button
@@ -320,6 +333,15 @@ function UserCard({ user, type }) {
           </div>,
           document.body
         )}
+
+        {/* Edit User Form Modal */}
+      {isEditing && (
+          <EditUserForm 
+            user={user} 
+            onClose={() => setIsEditing(false)} 
+            onUpdate={handleUpdateUser} 
+          />
+      )}
     </>
   )
 }

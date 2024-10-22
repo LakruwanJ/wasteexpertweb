@@ -49,7 +49,7 @@ function CreateUserForm({ open, onClose, usertype }) {
     setShowPassword((prevState) => !prevState);
   };
 
-  const addNewUser = async (event) => {
+  const updateUser = async (event) => {
     event.preventDefault(); // Prevent default form submission
     console.log('formData:', formData);
 
@@ -57,13 +57,13 @@ function CreateUserForm({ open, onClose, usertype }) {
 
     switch (usertype) {
       case 'Admin':
-        link = 'http://localhost:3001/addAdmin/addAdmin';
+        link = 'http://localhost:3001/addAdmin/updateAdmin';
         break;
       case 'Collector':
-        link = 'http://localhost:3001/addCollector/addCollector';
+        link = 'http://localhost:3001/addCollector/updateCollector';
         break;
       case 'Dispatcher':
-        link = 'http://localhost:3001/addDispatcher/addDispatcher';
+        link = 'http://localhost:3001/addDispatcher/updateDispatcher';
         break;
       default:
         console.error('Invalid user type:', usertype);
@@ -104,8 +104,8 @@ function CreateUserForm({ open, onClose, usertype }) {
           <svg xmlns="http://www.w3.org/2000/svg" height="20" width="15" viewBox="0 0 384 512"><path fill="#ff4d4d" d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" /></svg>
         </button>
 
-        <form onSubmit={addNewUser}>
-          <label htmlFor="price" className="block text-md font-medium leading-4 text-gray-900">
+        <form onSubmit={updateUser}>
+          <label className="block text-md font-medium leading-4 text-gray-900">
             Username
           </label>
           <div className="relative my-6">
@@ -150,7 +150,7 @@ function CreateUserForm({ open, onClose, usertype }) {
             Mobile Number
           </label>
           <div className="relative my-6">
-            <input type='text' name='phoneNum' value={formData.phoneNum} onChange={handleChange} required className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
+            <input type='number' name='phoneNum' value={formData.phoneNum} onChange={handleChange} required maxLength="10" pattern="\d*" className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
             <label for="id-date07" className="absolute -top-2 left-2 z-[1] cursor-text px-2 text-xs text-slate-400 transition-all before:absolute before:left-0 before:top-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-sm peer-autofill:-top-2 peer-required:after:text-pink-500 peer-required:after:content-['\00a0*']  peer-focus:-top-2 peer-focus:cursor-default peer-focus:text-xs peer-focus:text-emerald-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent">
               Enter Mobile Number
             </label>
