@@ -109,21 +109,21 @@ function Profile(usertype, user) {
                 Full Name
               </label>
               <div className="relative my-6">
-                <input disabled type='text' name='fullName' value={user.fullName} className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
+                <input type='text' name='fullName' value={user.fullName} className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
               </div>
 
               <label htmlFor="price" className="block text-md font-medium leading-4 text-gray-900">
                 Address
               </label>
               <div className="relative my-6">
-                <input disabled type='text' name='address' value={user.address} className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
+                <input type='text' name='address' value={user.address} className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
               </div>
 
               <label htmlFor="price" className="block text-md font-medium leading-4 text-gray-900">
                 Mobile Number
               </label>
               <div className="relative my-6">
-                <input disabled type='text' name='phoneNum' value={user.phoneNum} className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
+                <input type='text' name='phoneNum' value={user.phoneNum} className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400" />
               </div>
 
               <label htmlFor="price" className="block text-md font-medium leading-4 text-gray-900">
