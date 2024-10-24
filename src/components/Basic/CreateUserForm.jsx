@@ -3,28 +3,10 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+//data
+import { tsu, ter } from '../Functions/ResponseToste';
+
 function CreateUserForm({ open, onClose, usertype }) {
-
-  const tsu = (text) => toast.success(text, {
-    autoClose: 10000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "colored",
-  });
-
-  const ter = (text) => toast.error(text, {
-    position: "top-right",
-    autoClose: 10000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "colored",
-  });
 
   const [formData, setFormData] = useState({
     username: '',
@@ -74,6 +56,8 @@ function CreateUserForm({ open, onClose, usertype }) {
       const response = await axios.post(link, formData);
       console.log(response.data);
       tsu('New ' + usertype + ' Added');
+      // window.location.reload();
+
       setFormData({
         username: '',
         password: '',

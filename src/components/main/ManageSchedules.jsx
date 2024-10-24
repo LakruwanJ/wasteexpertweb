@@ -6,6 +6,12 @@ import metalbinL from '../Images/metalbinL.png';
 import paperbinL from '../Images/paperbinL.png';
 import plasticbinL from '../Images/plasticbinL.png';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+//data
+import { tsu, ter } from '../Functions/ResponseToste';
+
 function ManageSchedules() {
   const [shedulepickup, setShedulepickups] = useState([]);
   const [organizedPickupsL, setOrganizedPickupsL] = useState({});
@@ -49,12 +55,15 @@ function ManageSchedules() {
         const response = await axios.post('http://localhost:3001/schedulePickup/deleteschedulepickup', { _id });
         if (response.data.status) {
           console.log("Schedule pickup deleted successfully");
+          tsu('Schedule pickup deleted successfully');
           fetchData(); // Refresh the data after deletion
         } else {
           console.error("Failed to delete schedule pickup:", response.data.message);
+          ter('Failed to delete schedule pickup');
         }
       } catch (error) {
         console.error("Error deleting schedule pickup:", error);
+        ter('Error deleting schedule pickup');
       }
     }
   };

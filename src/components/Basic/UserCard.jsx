@@ -177,6 +177,25 @@ function UserCard({ user, type }) {
       setIsEditing(false);
     };
 
+     //pro pic
+  const imageUrl = "http://localhost:3001/uploads/users/" + user.username + ".png";
+  const [proPic, setProPic] = useState("");
+
+
+  const img = new Image();
+  img.onload = function () {
+    console.log("Image available: Yes");
+    setProPic(imageUrl)
+  };
+  img.onerror = function () {
+    console.log("Image available: Not");
+    setProPic(userImg)
+  };
+
+  // Always attempt to load the image
+  img.src = imageUrl;
+
+
   return (
     <>
     {console.log("user",user._id)}
@@ -186,7 +205,7 @@ function UserCard({ user, type }) {
         <figure className="p-6 pb-0 text-center">
           <span className="relative inline-flex h-30 w-30 items-center justify-center rounded-full text-white">
             <img
-              src={user.image || userImg}
+              src={proPic}
               alt="user name"
               title="user name"
               width="120"

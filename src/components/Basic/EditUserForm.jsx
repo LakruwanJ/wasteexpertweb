@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+//data
+import { tsu, ter } from '../Functions/ResponseToste';
 
 const EditUserForm = ({ user, onClose, onUpdate, usertype }) => {
   const [username, setUsername] = useState(user.username);
@@ -47,6 +52,7 @@ const EditUserForm = ({ user, onClose, onUpdate, usertype }) => {
     try {
       const response = await axios.post(link, formData);
       console.log(response.data);
+      tsu('S');
 
     } catch (error) {
       console.error("Error updating:", error);

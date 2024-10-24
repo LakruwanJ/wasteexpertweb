@@ -159,7 +159,7 @@ function AddNewScheduleForm({ onAreaChange, onReloadMap }) {
 
             } catch (error) {
                 console.error('Error Adding schedule:', error);
-                ter('Error Adding schedule Pickup')
+                ter('Error Adding schedule Pickup');
             }
         } else {
             ter('err')

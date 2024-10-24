@@ -66,7 +66,7 @@ function App() {
         />
 
         {/* Default redirect */}
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Collector  />} />
       </Routes>
     </BrowserRouter>
   );
