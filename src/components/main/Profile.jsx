@@ -15,7 +15,10 @@ function Profile() {
     address: "",
     phoneNum: "",
     email: "",
-    role: "", // Only applicable for admin
+    role: "",
+    jobs:"",
+    vehicalNo:""
+
   });
   const [formData, setFormData] = useState({
     oldPassword: "",
@@ -239,6 +242,7 @@ function Profile() {
               </label>
               <div className="relative my-6">
                 <input
+                disabled
                   type="text"
                   name="fullName"
                   value={user.fullName || ""}
@@ -254,6 +258,7 @@ function Profile() {
               </label>
               <div className="relative my-6">
                 <input
+                disabled
                   type="text"
                   name="address"
                   value={user.address || ""}
@@ -269,6 +274,7 @@ function Profile() {
               </label>
               <div className="relative my-6">
                 <input
+                disabled
                   type="text"
                   name="phoneNum"
                   value={user.phoneNum || ""}
@@ -306,6 +312,43 @@ function Profile() {
                       type="text"
                       name="role"
                       value={user.role || ""}
+                      className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+                    />
+                  </div>
+
+                  <label
+                    htmlFor="jobs"
+                    className="block text-md font-medium leading-4 text-gray-900"
+                  >
+                    Jobs
+                  </label>
+                  <div className="relative my-6">
+                    <input
+                      disabled
+                      type="text"
+                      name="jobs"
+                      value={user.jobs || ""}
+                      className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+                    />
+                  </div>
+
+                </>
+              )}
+
+{user.userType === "Collector" && (
+                <>
+                  <label
+                    htmlFor="vehicalNo"
+                    className="block text-md font-medium leading-4 text-gray-900"
+                  >
+                    Vehical Number
+                  </label>
+                  <div className="relative my-6">
+                    <input
+                      disabled
+                      type="text"
+                      name="vehicalNo"
+                      value={user.vehicalNo || ""}
                       className="peer relative h-10 w-full rounded border border-slate-200 px-4 text-sm text-slate-500 placeholder-transparent outline-none transition-all autofill:bg-white focus:border-emerald-500 focus:outline-none focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
                     />
                   </div>

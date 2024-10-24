@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 import foodbinL from '../Images/foodbinL.png';
 import glassbinL from '../Images/glassbinL.png';
 import metalbinL from '../Images/metalbinL.png';
@@ -9,10 +10,31 @@ import plasticbinL from '../Images/plasticbinL.png';
 function MyAllSchedules() {
   const [shedulepickup, setShedulepickups] = useState([]);
   const [organizedPickupsL, setOrganizedPickupsL] = useState({});
-  const collector = '66901b082b62d03997fd3166';
+  const [userId, setUserId] = useState({});
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUserId(decoded._id); // Set userId after decoding the token
+      } catch (error) {
+        console.error("Token decode error:", error);
+      }
+    }
+  }, []); // This runs only once when the component mounts
+
+  useEffect(() => {
+    if (userId) { // Run fetchData only when userId is set
+      fetchData();
+    }
+  }, [userId]); // Run when userId changes (after being set)
 
   const fetchData = async () => {
     try {
+      const collector = userId; // Now userId will be properly set
+      console.log('Collector ID:', userId);
       const response = await axios.post('http://localhost:3001/schedulePickup/getSchedulePickupToCollector', { collector });
       setShedulepickups(response.data.schedulePickups); // Ensure consistency with server response
     } catch (error) {

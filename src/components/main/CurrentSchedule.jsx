@@ -1,14 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import MapS from '../Basic/MapS';
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode"; // Correct import for jwtDecode
 
 function CurrentSchedule() {
   const [todaySchedule, setTodaySchedule] = useState({});
+  const [userId, setUserId] = useState(null); // Initialize as null to check when userId is set
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUserId(decoded._id); // Set userId after decoding the token
+      } catch (error) {
+        console.error("Token decode error:", error);
+      }
+    }
+  }, []); // This runs only once when the component mounts
+
+  useEffect(() => {
+    if (userId) { // Run fetchData only when userId is set
+      fetchData();
+    }
+  }, [userId]); // Run when userId changes (after being set)
 
   // Fetch schedule data from the server
   const fetchData = async () => {
     try {
-      const collector = '6704e683362e015ad0929fc1'; // Replace with your actual collector ID
+      const collector = userId; // Now userId will be properly set
+      console.log('Collector ID:', userId);
       const response = await axios.post('http://localhost:3001/schedulePickup/getSchedulePickupToCollector', { collector });
 
       const today = new Date().toISOString().split('T')[0];
@@ -28,10 +50,6 @@ function CurrentSchedule() {
       console.error('Error fetching data:', error);
     }
   };
-
-  useEffect(() => {
-    fetchData(); // Fetch data when component mounts
-  }, []);
 
   // Handle schedule update
   const handleScheduleUpdate = () => {
@@ -78,30 +96,27 @@ function CurrentSchedule() {
     <>
       <div className="h-full flex items-center justify-center bg-white">
         <div className="p-6 flex items-center justify-center w-full h-full">
+          {Object.keys(todaySchedule).length === 0 ? (
+            <div>No Schedules for Today</div>
+          ) : (
+            <div>
+              <button
+                onClick={handleStartCollecting}
+                disabled={isStartButtonDisabled}
+                className={`inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-6 text-sm font-medium tracking-wide text-white transition duration-300 ${isStartButtonDisabled ? 'disabled:cursor-not-allowed disabled:border-emerald-300 disabled:bg-emerald-300 disabled:shadow-none' : 'hover:bg-emerald-600 focus:bg-emerald-700'}`}
+              >
+                <span>Start Collecting</span>
+              </button>
 
-        {Object.keys(todaySchedule).length === 0 ? (
-            <div>No Any Schedules for Today</div> // Log if todaySchedule is empty
-        ) : (
-          <div>
-          <button
-            onClick={handleStartCollecting}
-            disabled={isStartButtonDisabled} // Disable if status is 'Started'
-            className={`inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-6 text-sm font-medium tracking-wide text-white transition duration-300 ${isStartButtonDisabled ? 'disabled:cursor-not-allowed disabled:border-emerald-300 disabled:bg-emerald-300 disabled:shadow-none' : 'hover:bg-emerald-600 focus:bg-emerald-700'}`}
-          >
-            <span>Start Collecting</span>
-          </button>
-
-          <button
-            onClick={handleFinishCollecting}
-            disabled={isFinishButtonDisabled} // Disable if status is 'Pending'
-            className={`ml-6 inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-6 text-sm font-medium tracking-wide text-white transition duration-300 ${isFinishButtonDisabled ? 'disabled:cursor-not-allowed disabled:border-emerald-300 disabled:bg-emerald-300 disabled:shadow-none' : 'hover:bg-emerald-600 focus:bg-emerald-700'}`}
-          >
-            <span>Finish Collecting</span>
-          </button>
-        </div>
-        )}
-
-          
+              <button
+                onClick={handleFinishCollecting}
+                disabled={isFinishButtonDisabled}
+                className={`ml-6 inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded bg-emerald-500 px-6 text-sm font-medium tracking-wide text-white transition duration-300 ${isFinishButtonDisabled ? 'disabled:cursor-not-allowed disabled:border-emerald-300 disabled:bg-emerald-300 disabled:shadow-none' : 'hover:bg-emerald-600 focus:bg-emerald-700'}`}
+              >
+                <span>Finish Collecting</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -119,7 +134,7 @@ function CurrentSchedule() {
           }}
         />
       </div>
-      {console.log('today', todaySchedule)} {/* For debugging */}
+      {console.log('Today\'s Schedule:', todaySchedule)} {/* For debugging */}
     </>
   );
 }
