@@ -15,6 +15,7 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
         return initialFormData;
     });
 
+
     useEffect(() => {
         if (wasteTypes.length > 0) {
             const initialFormData = wasteTypes.reduce((acc, waste) => {
@@ -64,8 +65,9 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
 
             //update shedule pickup
             try {
+                console.log(todaySchedule.id,markerData.id,wasteTypesArray)
                 const response = await axios.post('http://localhost:3001/schedulePickup/updateScheduleLocationInPickup', {
-                    id: "66b1189b733a1828c4f3ccc2",
+                    id: todaySchedule.id,
                     locationId: markerData.id,
                     wasteTypes: wasteTypesArray
                 });
@@ -78,19 +80,20 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
 
             //reward
             try {
+                console.log("all",markerIndex, markerData, todaySchedule, onScheduleUpdate)
                 console.log(markerData.UserId,markerData.id,wasteTypesArray)
-                const response = await axios.post('http://localhost:3001/schedulePickup/updateScheduleLocationInPickup', {
+                const response = await axios.post('http://localhost:3001/collector/addGarbageWeight', {
                     userId: markerData.UserId,
                     scheduleId: markerData.id,
-                    wasteTypes: wasteTypesArray
+                    wasteList: wasteTypesArray
                 });
-                console.log('Schedule Location data updated:', response.data);
-                toast.success('Schedule updated successfully!');
+                console.log('Schedule reward data updated:', response.data);
+                toast.success('Schedule reward updated successfully!');
             } catch (error) {
-                console.error('Error updating schedule:', error);
-                toast.error('Failed to update schedule.');
+                console.error('Error updating Reward:', error);
+                toast.error('Failed to update Reward.');
             }
-            window.location.reload();
+            // window.location.reload();
 
             onScheduleUpdate(updatedSchedule); // Call the callback to refresh the schedule
 
