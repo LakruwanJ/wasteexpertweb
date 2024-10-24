@@ -8,7 +8,7 @@ function CurrentSchedule() {
   // Fetch schedule data from the server
   const fetchData = async () => {
     try {
-      const collector = '66901a3fe5138345ad0f9c44'; // Replace with your actual collector ID
+      const collector = '6704e683362e015ad0929fc1'; // Replace with your actual collector ID
       const response = await axios.post('http://localhost:3001/schedulePickup/getSchedulePickupToCollector', { collector });
 
       const today = new Date().toISOString().split('T')[0];

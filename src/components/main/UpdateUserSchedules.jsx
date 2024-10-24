@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+//data
+import { tsu, ter } from '../Functions/ResponseToste';
 
 function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySchedule, onScheduleUpdate }) {
     const userId = markerData?.UserId || "N/A";
@@ -49,7 +53,7 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
                 wasteTypes: wasteTypesArray,
             });
             console.log('Schedule updated:', response.data);
-            toast.success('Schedule updated successfully!');
+            tsu('User schedule updated successfully!');
 
             console.log(markerData.id)
 
@@ -72,10 +76,10 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
                     wasteTypes: wasteTypesArray
                 });
                 console.log('Schedule Location data updated:', response.data);
-                toast.success('Schedule updated successfully!');
+                tsu('Schedule updated successfully!');
             } catch (error) {
                 console.error('Error updating schedule:', error);
-                toast.error('Failed to update schedule.');
+                ter('Failed to update schedule.');
             }
 
             //reward
@@ -88,18 +92,18 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
                     wasteList: wasteTypesArray
                 });
                 console.log('Schedule reward data updated:', response.data);
-                toast.success('Schedule reward updated successfully!');
+                tsu('Schedule reward updated successfully!');
             } catch (error) {
                 console.error('Error updating Reward:', error);
-                toast.error('Failed to update Reward.');
+                ter('Failed to update Reward.');
             }
-            // window.location.reload();
+            window.location.reload();
 
             onScheduleUpdate(updatedSchedule); // Call the callback to refresh the schedule
 
         } catch (error) {
             console.error('Error updating schedule:', error);
-            toast.error('Failed to update schedule.');
+            ter('Failed to update schedule.');
         }
     };
 
@@ -170,6 +174,7 @@ function UpdateUserSchedules({ open, onClose, markerIndex, markerData, todaySche
                     )}
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 }

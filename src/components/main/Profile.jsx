@@ -2,9 +2,21 @@ import React, { useState, useEffect } from "react";
 import userImg from "../Images/user.png";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+//data
+import { tsu, ter } from '../Functions/ResponseToste';
 
 function Profile() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({
+    username: "",
+    fullName: "",
+    address: "",
+    phoneNum: "",
+    email: "",
+    role: "", // Only applicable for admin
+  });
   const [formData, setFormData] = useState({
     oldPassword: "",
     password: "",
@@ -12,7 +24,8 @@ function Profile() {
   });
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const [proPic, setProPic] = useState("");
+  
   useEffect(() => {
     // Retrieve the JWT token from localStorage
     const token = localStorage.getItem("token");
@@ -130,6 +143,39 @@ function Profile() {
     }
   };
 
+  const updateProfileImage = (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("profileImage", file);
+    axios
+      .post(`http://localhost:3001/image?user=${user.username}`, formData)
+      .then(({ data }) => {
+        tsu('Profile Picture Update Successfully');
+      })
+      .catch(() => {
+        ter('Error Adding Profile Picture');
+      });
+      window.location.reload();
+  };
+
+  //pro pic
+  const imageUrl = "http://localhost:3001/uploads/users/" + user.username + ".png";
+ 
+
+
+  const img = new Image();
+  img.onload = function () {
+    console.log("Image available: Yes");
+    setProPic(imageUrl)
+  };
+  img.onerror = function () {
+    console.log("Image available: Not");
+    setProPic(userImg)
+  };
+
+  // Always attempt to load the image
+  img.src = imageUrl;
+
   return (
     <div>
       <section>
@@ -139,7 +185,7 @@ function Profile() {
               <figure className="p-6 pb-0 text-center">
                 <span className="relative inline-flex h-30 w-30 items-center justify-center rounded-full text-white">
                   <img
-                    src={userImg} // Keeping the default image
+                    src={proPic} // Keeping the default image
                     alt="user name"
                     title="user name"
                     width="200"
@@ -153,6 +199,8 @@ function Profile() {
                 <div className="relative my-6 inline-flex w-full items-center gap-2 rounded border border-slate-200 text-sm text-slate-500">
                   <input
                     id="file-upload"
+                    accept="image/*"
+                    onChange={updateProfileImage}
                     name="file-upload"
                     type="file"
                     className="peer order-2 [&::file-selector-button]:hidden"
@@ -263,6 +311,7 @@ function Profile() {
                   </div>
                 </>
               )}
+              <br /><hr /><br />
 
               {/* Change Password Section */}
               <h2 className="mt-8 text-lg font-medium leading-6 text-gray-900">
